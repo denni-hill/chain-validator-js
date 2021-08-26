@@ -1,0 +1,32 @@
+{
+  "name": "chain-validator",
+  "version": "1.0.0",
+  "description": "easy to integrate validator.js based validation with chain syntax, informative validation result, unwanted data cutting and sanitizing",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json -w"
+  },
+  "keywords": [
+    "validator",
+    "validation",
+    "chain",
+    "sanitizing"
+  ],
+  "author": "Denis Saenko",
+  "license": "ISC",
+  "dependencies": {
+    "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2",
+    "source-map-support": "^0.5.19",
+    "typescript": "^4.3.5"
+  }
+}
