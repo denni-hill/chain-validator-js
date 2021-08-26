@@ -1,3 +1,5 @@
+import { IsEmailOptions } from "./../options";
+import validator from "validator";
 import { Context } from "../context/context";
 import { Validator } from "../context/validator";
 import { ValidationHandler } from "../handler/validation-handler";
@@ -7,15 +9,19 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   protected negateNext = false;
 
   protected addItem(validator: Validator): void {
+    validator.negate = this.negateNext;
     this.context.addItem(validator);
     this.negateNext = false;
   }
 
   protected addStandartValidator(
+    message: string,
     handler: ValidationHandler,
     ...args: any[]
   ): void {
-    this.addItem(new Validator(handler, args));
+    const validator = new Validator(handler, args);
+    validator.message = message;
+    this.addItem(validator);
   }
 
   constructor(
@@ -28,8 +34,20 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this;
   }
 
+  isEmail(options?: IsEmailOptions): Chain {
+    this.addStandartValidator("invalid email", async (value: any) =>
+      validator.isEmail(value, options)
+    );
+
+    return this.chain;
+  }
+
   isString(): Chain {
-    this.addStandartValidator(async (value: any) => typeof value === "string");
+    this.addStandartValidator(
+      "invalid type",
+      async (value: any) => typeof value === "string",
+      { type: "string" }
+    );
     return this.chain;
   }
 }

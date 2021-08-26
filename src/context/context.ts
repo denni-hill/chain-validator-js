@@ -3,6 +3,7 @@ import { SanitizersImpl } from "../chain/sanitizers-impl";
 import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
 import { ValidationResult } from "../result";
+import { bindAll } from "../utils";
 import { ContextItem } from "./context-item";
 import { Sanitizer } from "./sanitizer";
 import { Validator } from "./validator";
@@ -10,7 +11,7 @@ import { Validator } from "./validator";
 export type OptionalParams = { nullable: boolean };
 
 export class Context {
-  protected queue: ContextItem[];
+  protected queue: ContextItem[] = [];
   chain: ValidationChain;
   bailed = false;
   optional: OptionalParams;
@@ -26,11 +27,12 @@ export class Context {
   constructor() {
     const methodsKeeper = {};
 
-    Object.assign(
+    this.chain = Object.assign(
       methodsKeeper,
-      new SanitizersImpl(this, methodsKeeper),
-      new ValidationsImpl(this, methodsKeeper),
-      new ContextHandlerImpl(this, methodsKeeper)
+      { context: this },
+      bindAll(new SanitizersImpl(this, methodsKeeper)),
+      bindAll(new ValidationsImpl(this, methodsKeeper)),
+      bindAll(new ContextHandlerImpl(this, methodsKeeper))
     );
   }
 
