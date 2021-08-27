@@ -24,6 +24,7 @@ export class Validator implements ContextItem {
     }
 
     return {
+      value: context.value,
       message,
       args: this.args,
       path: context.path

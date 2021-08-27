@@ -54,6 +54,7 @@ export class Context {
           return result;
         } else
           result.errors.push({
+            value: this.value,
             message: "not nullable",
             path: this.path,
             args: {}

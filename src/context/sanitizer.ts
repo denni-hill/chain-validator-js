@@ -10,7 +10,6 @@ export class Sanitizer implements ContextItem {
   ) {}
 
   async run(context: Context): Promise<void> {
-    context.value = this.handler(context.value, ...this.args);
-    return;
+    context.value = await this.handler(context.value, ...this.args);
   }
 }
