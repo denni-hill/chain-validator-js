@@ -1,4 +1,4 @@
-import { IsEmailOptions } from "./../options";
+import { IsEmailOptions, IsNumericOptions } from "./../options";
 import validator from "validator";
 import { Context } from "../context/context";
 import { Validator } from "../context/validator";
@@ -38,7 +38,15 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     this.addStandartValidator("invalid email", async (value: any) =>
       validator.isEmail(value, options)
     );
+    return this.chain;
+  }
 
+  isNumeric(options?: IsNumericOptions): Chain {
+    this.addStandartValidator(
+      "invalid type",
+      async (value: any) => validator.isNumeric(value, options),
+      { type: "numeric" }
+    );
     return this.chain;
   }
 
@@ -47,6 +55,15 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
       "invalid type",
       async (value: any) => typeof value === "string",
       { type: "string" }
+    );
+    return this.chain;
+  }
+
+  isArray(): Chain {
+    this.addStandartValidator(
+      "invalid type",
+      async (value: any) => Array.isArray(value),
+      { type: "array" }
     );
     return this.chain;
   }

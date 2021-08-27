@@ -3,7 +3,7 @@ import { SanitizersImpl } from "../chain/sanitizers-impl";
 import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
 import { ValidationResult } from "../result";
-import { bindAll } from "../utils";
+import { bindAll, getValueByPath } from "../utils";
 import { ContextItem } from "./context-item";
 import { Sanitizer } from "./sanitizer";
 import { Validator } from "./validator";
@@ -36,14 +36,10 @@ export class Context {
     );
   }
 
-  async run(
-    objectToValidate: any,
-    path: string[],
-    value: any
-  ): Promise<ValidationResult> {
+  async run(objectToValidate: any, path: string[]): Promise<ValidationResult> {
     this.objectToValidate = objectToValidate;
     this.path = path;
-    this.value = value;
+    this.value = getValueByPath(objectToValidate, path);
 
     const result = new ValidationResult();
 

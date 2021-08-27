@@ -28,3 +28,12 @@ export function toString(value: any, deep = true): string {
 
   return String(value);
 }
+
+export function getValueByPath(object: any, path: string[]): any {
+  let value = object;
+  for (const pathPart of path) {
+    if (value[pathPart] === undefined) return undefined;
+    else value = value[pathPart];
+  }
+  return value;
+}
