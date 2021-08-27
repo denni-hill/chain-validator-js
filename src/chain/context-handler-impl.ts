@@ -14,6 +14,10 @@ export class ContextHandlerImpl<Chain> implements ContextHandler<Chain> {
     return this.chain;
   }
   if(condition: ValidationHandler | ValidationChain): Chain {
+    if ((condition as ValidationChain).context !== undefined) {
+      const context = (condition as ValidationChain).context;
+      //todo: complete if statement
+    }
     return this.chain;
   }
   optional(options: OptionalParams = { nullable: false }): Chain {
