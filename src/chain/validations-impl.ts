@@ -3,6 +3,7 @@ import {
   AlphanumericLocale,
   CustomValidatorOptions,
   HashAlgorithm,
+  IPVersion,
   IsAlphanumericOptions,
   IsBase64Options,
   IsByteLengthOptions,
@@ -31,7 +32,8 @@ import { Context } from "../context/context";
 import { Validator } from "../context/validator";
 import { ValidationHandler } from "../handler/validation-handler";
 import { Validations } from "./validations";
-import { IPVersion } from "net";
+import { isArray } from "../implementations/validators/is-array";
+import { toString } from "../utils";
 
 export class ValidationsImpl<Chain> implements Validations<Chain> {
   protected negateNext = false;
@@ -64,166 +66,504 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   custom(handler: ValidationHandler, options?: CustomValidatorOptions): Chain {
     if (options === undefined) options = {};
     this.addStandartValidator(handler, options.args, options.message);
+    return this.chain;
   }
 
   isArray(): Chain {
-    this.addStandartValidator(
-      async (value: any) => Array.isArray(value),
-      { type: "array" },
-      "invalid type"
-    );
+    this.addStandartValidator(isArray, { type: "array" }, "type");
     return this.chain;
   }
 
   contains(seed: any): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.contains(toString(value), seed),
+      { seed },
+      "contains"
+    );
+    return this.chain;
   }
+
   equals(comparison: string): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.equals(toString(value), comparison),
+      { comparison },
+      "equals"
+    );
+
+    return this.chain;
   }
+
   isAfter(date?: string): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isAfter(toString(value), date),
+      { date },
+      "isAfter"
+    );
+
+    return this.chain;
   }
+
   isAlpha(locale?: AlphaLocale): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isAlpha(toString(value), locale),
+      { locale },
+      "isAlpha"
+    );
+
+    return this.chain;
   }
-  isAplthanumeric(
+
+  isAlphanumeric(
     locale?: AlphanumericLocale,
     options?: IsAlphanumericOptions
   ): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) =>
+        validator.isAlphanumeric(toString(value), locale, options),
+      { locale, ...options },
+      "isAlphanumeric"
+    );
+    return this.chain;
   }
+
   isAscii(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isAscii(toString(value)),
+      {},
+      "isAscii"
+    );
+    return this.chain;
   }
+
   isBase32(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBase32(toString(value)),
+      {},
+      "isBase32"
+    );
+
+    return this.chain;
   }
+
   isBase58(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBase58(toString(value)),
+      {},
+      "isBase58"
+    );
+
+    return this.chain;
   }
+
   isBase64(options?: IsBase64Options): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBase64(toString(value), options),
+      { ...options },
+      "isBase64"
+    );
+
+    return this.chain;
   }
+
   isBefore(date?: string): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBefore(toString(value), date),
+      { date },
+      "isBefore"
+    );
+
+    return this.chain;
   }
+
   isIBAN(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isIBAN(toString(value)),
+      {},
+      "isIBAN"
+    );
+
+    return this.chain;
   }
+
   isBIC(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBIC(toString(value)),
+      {},
+      "isBIC"
+    );
+
+    return this.chain;
   }
+
   isBoolean(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBoolean(toString(value)),
+      {},
+      "isBoolean"
+    );
+
+    return this.chain;
   }
+
   isByteLength(options?: IsByteLengthOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isByteLength(toString(value), options),
+      { ...options },
+      "isByteLength"
+    );
+
+    return this.chain;
   }
+
   isCreditCard(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isCreditCard(toString(value)),
+      {},
+      "isCreditCard"
+    );
+
+    return this.chain;
   }
+
   isCurrency(options?: IsCurrencyOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isCurrency(toString(value), options),
+      { ...options },
+      "isCurrency"
+    );
+
+    return this.chain;
   }
+
   isEtheriumAddress(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isEthereumAddress(toString(value)),
+      {},
+      "isEtheriumAddress"
+    );
+
+    return this.chain;
   }
+
   isBtcAddress(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isBtcAddress(toString(value)),
+      {},
+      "isBtcAddress"
+    );
+
+    return this.chain;
   }
+
   isDataURI(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isDataURI(toString(value)),
+      {},
+      "isDataURI"
+    );
+
+    return this.chain;
   }
+
   isDate(options?: IsDateOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isDate(toString(value), options),
+      { ...options },
+      "isDate"
+    );
+
+    return this.chain;
   }
+
   isDecimal(options?: IsDecimalOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isDecimal(toString(value), options),
+      { ...options },
+      "isDecimal"
+    );
+
+    return this.chain;
   }
+
   isDivisibleBy(number: number): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isDivisibleBy(toString(value), number),
+      { number },
+      "isDivisibleBy"
+    );
+
+    return this.chain;
   }
+
   isEmail(options?: IsEmailOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isEmail(toString(value), options),
+      { ...options },
+      "isEmail"
+    );
+
+    return this.chain;
   }
+
   isEmpty(options?: IsEmptyOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isEmpty(toString(value), options),
+      { ...options },
+      "isEmpty"
+    );
+
+    return this.chain;
   }
+
   isFloat(options?: IsFloatOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isFloat(toString(value), options),
+      { ...options },
+      "isFloat"
+    );
+
+    return this.chain;
   }
+
   isFQDN(options?: IsFQDNOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isFQDN(toString(value), options),
+      { ...options },
+      "isFQDN"
+    );
+
+    return this.chain;
   }
+
   isFullWidth(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isFullWidth(toString(value)),
+      {},
+      "isFullWidth"
+    );
+
+    return this.chain;
   }
+
   isHalfWidth(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isHalfWidth(toString(value)),
+      {},
+      "isHalfWidh"
+    );
+
+    return this.chain;
   }
+
   isHash(algorithm: HashAlgorithm): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isHash(toString(value), algorithm),
+      { algorithm },
+      "isHash"
+    );
+
+    return this.chain;
   }
+
   isHexadecimal(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isHexadecimal(toString(value)),
+      {},
+      "isHexadecimal"
+    );
+
+    return this.chain;
   }
+
   isHexColor(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isHexColor(toString(value)),
+      {},
+      "isHexColor"
+    );
+
+    return this.chain;
   }
+
   isHSL(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isHSL(toString(value)),
+      {},
+      "isHSL"
+    );
+
+    return this.chain;
   }
+
   isRgbColor(includePercentValues?: boolean): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) =>
+        validator.isRgbColor(toString(value), includePercentValues),
+      { includePercentValues },
+      "isRgbColor"
+    );
+
+    return this.chain;
   }
+
   isIn(values: any[]): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isIn(toString(value), values),
+      { values },
+      "isIn"
+    );
+
+    return this.chain;
   }
+
   isInt(options?: IsIntOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isInt(toString(value), options),
+      { ...options },
+      "isInt"
+    );
+
+    return this.chain;
   }
+
   isIP(version?: IPVersion): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isIP(toString(value), version),
+      { version },
+      "isIP"
+    );
+
+    return this.chain;
   }
+
   isIPRange(version?: IPVersion): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isIPRange(toString(value), version),
+      { version },
+      "isIPRange"
+    );
+
+    return this.chain;
   }
+
   isEAN(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isEAN(toString(value)),
+      {},
+      "isEAN"
+    );
+
+    return this.chain;
   }
+
   isISIN(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isISIN(toString(value)),
+      {},
+      "isISIN"
+    );
+
+    return this.chain;
   }
+
   isISO31661Alpha2(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isISO31661Alpha2(toString(value)),
+      {},
+      "isISO31661Alpha2"
+    );
+
+    return this.chain;
   }
+
   isISO31661Alpha3(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isISO31661Alpha3(toString(value)),
+      {},
+      "isISO31661Alpha3"
+    );
+
+    return this.chain;
   }
+
   isISO8601(options?: IsISO8601Options): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isISO8601(toString(value), options),
+      { ...options },
+      "isISO8601"
+    );
+
+    return this.chain;
   }
+
   isISSN(options?: IsISSNOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isISSN(toString(value), options),
+      { ...options },
+      "isISSN"
+    );
+
+    return this.chain;
   }
+
   isISRC(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isISRC(toString(value)),
+      {},
+      "isISRC"
+    );
+
+    return this.chain;
   }
+
   isRFC3339(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isRFC3339(toString(value)),
+      {},
+      "isRFC3339"
+    );
+
+    return this.chain;
   }
+
   isJSON(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isJSON(toString(value)),
+      {},
+      "isJSON"
+    );
+
+    return this.chain;
   }
+
   isJWT(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isJWT(toString(value)),
+      {},
+      "isJWT"
+    );
+
+    return this.chain;
   }
+
   isLatLong(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isLatLong(toString(value)),
+      {},
+      "isLatLong"
+    );
+
+    return this.chain;
   }
+
   isLength(options?: IsLengthOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      async (value: any) => validator.isLength(toString(value), options),
+      { ...options },
+      "isLength"
+    );
+
+    return this.chain;
   }
   isLocale(): Chain {
     throw new Error("Method not implemented.");

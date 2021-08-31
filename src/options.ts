@@ -1,9 +1,43 @@
 export type URLProtocol = "http" | "https" | "ftp" | string;
 export type UUIDVersion = 3 | 4 | 5 | "3" | "4" | "5" | "all";
-export type IPVersion = 4 | 6;
+export type IPVersion = "4" | "6" | 4 | 6;
 
 export type AlphaLocale =
+  | "en-US"
+  | "bg-BG"
+  | "cs-CZ"
+  | "da-DK"
+  | "de-DE"
+  | "el-GR"
+  | "es-AR"
+  | "es-ES"
+  | "fr-FR"
+  | "it-IT"
+  | "nb-NO"
+  | "nl-NL"
+  | "nn-NO"
+  | "hu-HU"
+  | "pl-PL"
+  | "pt-PT"
+  | "ru-RU"
+  | "sl-SI"
+  | "sk-SK"
+  | "sr-RS@latin"
+  | "sr-RS"
+  | "sv-SE"
+  | "tr-TR"
+  | "uk-UA"
+  | "ku-IQ"
   | "ar"
+  | "he"
+  | "fa-IR"
+  | "en-AU"
+  | "en-GB"
+  | "en-HK"
+  | "en-IN"
+  | "en-NZ"
+  | "en-ZA"
+  | "en-ZM"
   | "ar-AE"
   | "ar-BH"
   | "ar-DZ"
@@ -14,55 +48,52 @@ export type AlphaLocale =
   | "ar-LB"
   | "ar-LY"
   | "ar-MA"
-  | "ar-QA"
   | "ar-QM"
+  | "ar-QA"
   | "ar-SA"
   | "ar-SD"
   | "ar-SY"
   | "ar-TN"
   | "ar-YE"
-  | "az-AZ"
-  | "bg-BG"
-  | "cs-CZ"
-  | "da-DK"
-  | "de-DE"
-  | "el-GR"
-  | "en-AU"
-  | "en-GB"
-  | "en-HK"
-  | "en-IN"
-  | "en-NZ"
-  | "en-US"
-  | "en-ZA"
-  | "en-ZM"
-  | "es-ES"
-  | "fa-AF"
-  | "fa-IR"
-  | "fr-FR"
-  | "he"
-  | "hu-HU"
-  | "id-ID"
-  | "it-IT"
-  | "ku-IQ"
-  | "nb-NO"
-  | "nl-NL"
-  | "nn-NO"
-  | "pl-PL"
   | "pt-BR"
-  | "pt-PT"
-  | "ru-RU"
-  | "sk-SK"
-  | "sl-SI"
-  | "sr-RS"
-  | "sr-RS@latin"
-  | "sv-SE"
-  | "th-TH"
-  | "tr-TR"
-  | "uk-UA"
-  | "vi-VN";
+  | "pl-Pl";
 
 export type AlphanumericLocale =
+  | "en-US"
+  | "bg-BG"
+  | "cs-CZ"
+  | "da-DK"
+  | "de-DE"
+  | "el-GR"
+  | "es-AR"
+  | "es-ES"
+  | "fr-FR"
+  | "it-IT"
+  | "hu-HU"
+  | "nb-NO"
+  | "nl-NL"
+  | "nn-NO"
+  | "pl-PL"
+  | "pt-PT"
+  | "ru-RU"
+  | "sl-SI"
+  | "sk-SK"
+  | "sr-RS@latin"
+  | "sr-RS"
+  | "sv-SE"
+  | "tr-TR"
+  | "uk-UA"
+  | "ku-IQ"
   | "ar"
+  | "he"
+  | "fa-IR"
+  | "en-AU"
+  | "en-GB"
+  | "en-HK"
+  | "en-IN"
+  | "en-NZ"
+  | "en-ZA"
+  | "en-ZM"
   | "ar-AE"
   | "ar-BH"
   | "ar-DZ"
@@ -73,54 +104,15 @@ export type AlphanumericLocale =
   | "ar-LB"
   | "ar-LY"
   | "ar-MA"
-  | "ar-QA"
   | "ar-QM"
+  | "ar-QA"
   | "ar-SA"
   | "ar-SD"
   | "ar-SY"
   | "ar-TN"
   | "ar-YE"
-  | "az-AZ"
-  | "bg-BG"
-  | "cs-CZ"
-  | "da-DK"
-  | "de-DE"
-  | "el-GR"
-  | "en-AU"
-  | "en-GB"
-  | "en-HK"
-  | "en-IN"
-  | "en-NZ"
-  | "en-US"
-  | "en-ZA"
-  | "en-ZM"
-  | "es-ES"
-  | "fa-AF"
-  | "fa-IR"
-  | "fr-FR"
-  | "fr-BE"
-  | "he"
-  | "hu-HU"
-  | "it-IT"
-  | "id-ID"
-  | "ku-IQ"
-  | "nb-NO"
-  | "nl-BE"
-  | "nl-NL"
-  | "nn-NO"
-  | "pl-PL"
   | "pt-BR"
-  | "pt-PT"
-  | "ru-RU"
-  | "sk-SK"
-  | "sl-SI"
-  | "sr-RS"
-  | "sr-RS@latin"
-  | "sv-SE"
-  | "th-TH"
-  | "tr-TR"
-  | "uk-UA"
-  | "vi-VN";
+  | "pl-Pl";
 
 export type MobilePhoneLocale =
   | "any"
@@ -481,11 +473,78 @@ export interface IsDateOptions {
   strictMode?: boolean;
 }
 
+export type FloatLocale =
+  | "en-US"
+  | "ar"
+  | "en-AU"
+  | "en-GB"
+  | "en-HK"
+  | "en-IN"
+  | "en-NZ"
+  | "en-ZA"
+  | "en-ZM"
+  | "ar-AE"
+  | "ar-BH"
+  | "ar-DZ"
+  | "ar-EG"
+  | "ar-IQ"
+  | "ar-JO"
+  | "ar-KW"
+  | "ar-LB"
+  | "ar-LY"
+  | "ar-MA"
+  | "ar-QM"
+  | "ar-QA"
+  | "ar-SA"
+  | "ar-SD"
+  | "ar-SY"
+  | "ar-TN"
+  | "ar-YE"
+  | "bg-BG"
+  | "cs-CZ"
+  | "da-DK"
+  | "de-DE"
+  | "el-GR"
+  | "es-ES"
+  | "fr-FR"
+  | "it-IT"
+  | "ku-IQ"
+  | "hu-HU"
+  | "nb-NO"
+  | "nn-NO"
+  | "nl-NL"
+  | "pl-PL"
+  | "pt-PT"
+  | "ru-RU"
+  | "sl-SI"
+  | "sr-RS@latin"
+  | "sr-RS"
+  | "sv-SE"
+  | "tr-TR"
+  | "uk-UA"
+  | "pt-BR"
+  | "pl-Pl";
+
+export type DecimalLocale = FloatLocale;
+
 export interface IsDecimalOptions {
-  decimal_digits?: string;
-  force_decimal?: boolean;
-  locale?: AlphanumericLocale;
-  blacklisted_chars?: string;
+  /**
+   * @default false
+   */
+  force_decimal?: boolean | undefined;
+  /**
+   * `decimal_digits` is given as a range like `'1,3'`,
+   * a specific value like `'3'` or min like `'1,'`
+   *
+   * @default '1,'
+   */
+  decimal_digits?: string | undefined;
+  /**
+   * DecimalLocale
+   *
+   * @default 'en-US'
+   */
+  locale?: DecimalLocale | undefined;
 }
 
 export interface IsEmailOptions {
@@ -508,8 +567,27 @@ export interface IsEmptyOptions {
   ignore_whitespace: boolean;
 }
 
-export interface IsFloatOptions extends MinMaxExtendedOptions {
-  locale?: AlphanumericLocale;
+export interface IsFloatOptions {
+  /**
+   * less or equal
+   */
+  min?: number | undefined;
+  /**
+   * greater or equal
+   */
+  max?: number | undefined;
+  /**
+   * greater than
+   */
+  gt?: number | undefined;
+  /**
+   * less than
+   */
+  lt?: number | undefined;
+  /**
+   * FloatLocale
+   */
+  locale?: FloatLocale | undefined;
 }
 
 /**

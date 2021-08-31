@@ -1,9 +1,9 @@
-import { IPVersion } from "net";
 import { ValidationHandler } from "../handler/validation-handler";
 import {
   AlphaLocale,
   AlphanumericLocale,
   HashAlgorithm,
+  IPVersion,
   IsAlphanumericOptions,
   IsBase64Options,
   IsByteLengthOptions,
@@ -48,7 +48,7 @@ export interface Validations<Return> {
 
   isAlpha(locale?: AlphaLocale): Return;
 
-  isAplthanumeric(
+  isAlphanumeric(
     locale?: AlphanumericLocale,
     options?: IsAlphanumericOptions
   ): Return;
