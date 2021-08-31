@@ -1,13 +1,195 @@
-import { IsEmailOptions, IsNumericOptions } from "../options";
+import { IPVersion } from "net";
+import { ValidationHandler } from "../handler/validation-handler";
+import {
+  AlphaLocale,
+  AlphanumericLocale,
+  HashAlgorithm,
+  IsAlphanumericOptions,
+  IsBase64Options,
+  IsByteLengthOptions,
+  IsCurrencyOptions,
+  IsDateOptions,
+  IsDecimalOptions,
+  IsEmailOptions,
+  IsEmptyOptions,
+  IsFloatOptions,
+  IsFQDNOptions,
+  IsIntOptions,
+  IsISO8601Options,
+  IsISSNOptions,
+  IsLengthOptions,
+  IsMACAddressOptions,
+  IsNumericOptions,
+  IsStrongPasswordOptions,
+  IsURLOptions,
+  MobilePhoneLocale,
+  PassportCountryCode,
+  PostalCodeLocale,
+  UUIDVersion
+} from "../options";
 
 export interface Validations<Return> {
   not(): Validations<Return>;
 
-  isEmail(options?: IsEmailOptions): Return;
+  custom(
+    handler: ValidationHandler,
+    options?: { args?: any; message?: string }
+  ): Return;
 
-  isNumeric(options?: IsNumericOptions): Return;
+  isArray(): Return;
 
   isString(): Return;
 
-  isArray(): Return;
+  contains(seed: any): Return;
+
+  equals(comparison: string): Return;
+
+  isAfter(date?: string): Return;
+
+  isAlpha(locale?: AlphaLocale): Return;
+
+  isAplthanumeric(
+    locale?: AlphanumericLocale,
+    options?: IsAlphanumericOptions
+  ): Return;
+
+  isAscii(): Return;
+
+  isBase32(): Return;
+
+  isBase58(): Return;
+
+  isBase64(options?: IsBase64Options): Return;
+
+  isBefore(date?: string): Return;
+
+  isIBAN(): Return;
+
+  isBIC(): Return;
+
+  isBoolean(): Return;
+
+  isByteLength(options?: IsByteLengthOptions): Return;
+
+  isCreditCard(): Return;
+
+  isCurrency(options?: IsCurrencyOptions): Return;
+
+  isEtheriumAddress(): Return;
+
+  isBtcAddress(): Return;
+
+  isDataURI(): Return;
+
+  isDate(options?: IsDateOptions): Return;
+
+  isDecimal(options?: IsDecimalOptions): Return;
+
+  isDivisibleBy(number: number): Return;
+
+  isEmail(options?: IsEmailOptions): Return;
+
+  isEmpty(options?: IsEmptyOptions): Return;
+
+  isFloat(options?: IsFloatOptions): Return;
+
+  isFQDN(options?: IsFQDNOptions): Return;
+
+  isFullWidth(): Return;
+
+  isHalfWidth(): Return;
+
+  isHash(algorithm: HashAlgorithm): Return;
+
+  isHexadecimal(): Return;
+
+  isHexColor(): Return;
+
+  isHSL(): Return;
+
+  isRgbColor(includePercentValues?: boolean): Return;
+
+  isIn(values: any[]): Return;
+
+  isInt(options?: IsIntOptions): Return;
+
+  isIP(version?: IPVersion): Return;
+
+  isIPRange(version?: IPVersion): Return;
+
+  isEAN(): Return;
+
+  isISIN(): Return;
+
+  isISO31661Alpha2(): Return;
+
+  isISO31661Alpha3(): Return;
+
+  isISO8601(options?: IsISO8601Options): Return;
+
+  isISSN(options?: IsISSNOptions): Return;
+
+  isISRC(): Return;
+
+  isRFC3339(): Return;
+
+  isJSON(): Return;
+
+  isJWT(): Return;
+
+  isLatLong(): Return;
+
+  isLength(options?: IsLengthOptions): Return;
+
+  isLocale(): Return;
+
+  isLowercase(): Return;
+
+  isMACAddress(options?: IsMACAddressOptions): Return;
+
+  isMagnetURI(): Return;
+
+  isMD5(): Return;
+
+  isMimeType(): Return;
+
+  isMobilePhone(
+    locale: "any" | MobilePhoneLocale | MobilePhoneLocale[]
+  ): Return;
+
+  isMongoId(): Return;
+
+  isMultibyte(): Return;
+
+  isNumeric(options?: IsNumericOptions): Return;
+
+  isOctal(): Return;
+
+  isPassportNumber(countryCode?: PassportCountryCode): Return;
+
+  isPort(): Return;
+
+  isPostalCode(locale: "any" | PostalCodeLocale): Return;
+
+  isSemVer(): Return;
+
+  isStrongPassword(options?: IsStrongPasswordOptions): Return;
+
+  isSurrogatePair(): Return;
+
+  isURL(options?: IsURLOptions): Return;
+
+  isUppercase(): Return;
+
+  isUUID(version?: UUIDVersion): Return;
+
+  isVariableWidth(): Return;
+
+  isWhitelisted(chars: string | string[]): Return;
+
+  matches(pattern: RegExp): Return;
+
+  matches(pattern: string, modifiers?: string): Return;
+
+  isSlug(): Return;
 }

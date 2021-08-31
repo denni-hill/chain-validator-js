@@ -421,6 +421,17 @@ export interface IsBooleanOptions {
   strict?: boolean;
 }
 
+export interface IsByteLengthOptions {
+  /**
+   * @default 0
+   */
+  min?: number | undefined;
+  /**
+   * @default undefined
+   */
+  max?: number | undefined;
+}
+
 /**
  * defaults to
  * {
@@ -539,6 +550,17 @@ export interface IsJSONOptions {
  */
 export interface IsLatLongOptions {
   checkDMS?: boolean;
+}
+
+export interface IsLengthOptions {
+  /**
+   * @default 0
+   */
+  min?: number | undefined;
+  /**
+   * @default undefined
+   */
+  max?: number | undefined;
 }
 
 /**
@@ -677,4 +699,9 @@ export interface NormalizeEmailOptions {
   yahoo_remove_subaddress?: boolean;
   icloud_lowercase?: boolean;
   icloud_remove_subaddress?: boolean;
+}
+
+export interface CustomValidatorOptions {
+  message?: string;
+  args?: any;
 }

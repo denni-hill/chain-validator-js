@@ -4,18 +4,20 @@ import { ContextItem } from "./context-item";
 import { ValidationError } from "../error";
 
 export class Validator implements ContextItem {
-  message = "invalid value";
   negate = false;
-  protected args: any[];
 
-  constructor(private readonly handler: ValidationHandler, ...args: any[]) {
+  constructor(
+    readonly handler: ValidationHandler,
+    readonly args: any,
+    public message: string = "invalid value"
+  ) {
     this.args = args;
   }
 
   async run(context: Context): Promise<ValidationError> {
     let message: string = this.message;
     try {
-      let result = await this.handler(context.value, ...this.args);
+      let result = await this.handler(context.value);
       if (this.negate) result = !result;
 
       if (result) return;
