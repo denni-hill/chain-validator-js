@@ -19,6 +19,7 @@ import {
   IsISSNOptions,
   IsLengthOptions,
   IsMACAddressOptions,
+  IsMobilePhoneOptions,
   IsNumericOptions,
   IsStrongPasswordOptions,
   IsURLOptions,
@@ -32,7 +33,6 @@ import { Context } from "../context/context";
 import { Validator } from "../context/validator";
 import { ValidationHandler } from "../handler/validation-handler";
 import { Validations } from "./validations";
-import { isArray } from "../implementations/validators/is-array";
 import { toString } from "../utils";
 
 export class ValidationsImpl<Chain> implements Validations<Chain> {
@@ -50,11 +50,12 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   protected addStandartValidator(
-    handler: ValidationHandler,
-    args: any,
+    func: { (value: string): boolean },
+    args: unknown,
     message: string
   ): void {
-    const validator = new Validator(handler, args, message);
+    const asyncHandler = async (value) => func(toString(value));
+    const validator = new Validator(asyncHandler, args, message);
     this.addItem(validator);
   }
 
@@ -65,29 +66,35 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   custom(handler: ValidationHandler, options?: CustomValidatorOptions): Chain {
     if (options === undefined) options = {};
-    this.addStandartValidator(handler, options.args, options.message);
+    this.addItem(new Validator(handler, options.args, options.message));
     return this.chain;
   }
 
   isArray(): Chain {
-    this.addStandartValidator(isArray, { type: "array" }, "type");
+    this.addItem(
+      new Validator(
+        async (value: unknown) => Array.isArray(value),
+        { type: "array" },
+        "type"
+      )
+    );
     return this.chain;
   }
 
-  contains(seed: any): Chain {
+  contains(seed: unknown): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.contains(toString(value), seed),
+      (value) => validator.contains(value, seed),
       { seed },
-      "contains"
+      validator.contains.name
     );
     return this.chain;
   }
 
   equals(comparison: string): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.equals(toString(value), comparison),
+      (value) => validator.equals(value, comparison),
       { comparison },
-      "equals"
+      validator.equals.name
     );
 
     return this.chain;
@@ -95,9 +102,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isAfter(date?: string): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isAfter(toString(value), date),
+      (value) => validator.isAfter(value, date),
       { date },
-      "isAfter"
+      validator.isAfter.name
     );
 
     return this.chain;
@@ -105,9 +112,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isAlpha(locale?: AlphaLocale): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isAlpha(toString(value), locale),
+      (value) => validator.isAlpha(value, locale),
       { locale },
-      "isAlpha"
+      validator.isAlpha.name
     );
 
     return this.chain;
@@ -118,48 +125,35 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     options?: IsAlphanumericOptions
   ): Chain {
     this.addStandartValidator(
-      async (value: any) =>
-        validator.isAlphanumeric(toString(value), locale, options),
+      (value) => validator.isAlphanumeric(value, locale, options),
       { locale, ...options },
-      "isAlphanumeric"
+      validator.isAlphanumeric.name
     );
     return this.chain;
   }
 
   isAscii(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isAscii(toString(value)),
-      {},
-      "isAscii"
-    );
+    this.addStandartValidator(validator.isAscii, {}, validator.isAscii.name);
     return this.chain;
   }
 
   isBase32(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isBase32(toString(value)),
-      {},
-      "isBase32"
-    );
+    this.addStandartValidator(validator.isBase32, {}, validator.isBase32.name);
 
     return this.chain;
   }
 
   isBase58(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isBase58(toString(value)),
-      {},
-      "isBase58"
-    );
+    this.addStandartValidator(validator.isBase58, {}, validator.isBase58.name);
 
     return this.chain;
   }
 
   isBase64(options?: IsBase64Options): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isBase64(toString(value), options),
+      (value) => validator.isBase64(value, options),
       { ...options },
-      "isBase64"
+      validator.isBase64.name
     );
 
     return this.chain;
@@ -167,39 +161,31 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isBefore(date?: string): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isBefore(toString(value), date),
+      (value) => validator.isBefore(value, date),
       { date },
-      "isBefore"
+      validator.isBefore.name
     );
 
     return this.chain;
   }
 
   isIBAN(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isIBAN(toString(value)),
-      {},
-      "isIBAN"
-    );
+    this.addStandartValidator(validator.isIBAN, {}, validator.isIBAN.name);
 
     return this.chain;
   }
 
   isBIC(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isBIC(toString(value)),
-      {},
-      "isBIC"
-    );
+    this.addStandartValidator(validator.isBIC, {}, validator.isBIC.name);
 
     return this.chain;
   }
 
   isBoolean(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isBoolean(toString(value)),
+      validator.isBoolean,
       {},
-      "isBoolean"
+      validator.isBoolean.name
     );
 
     return this.chain;
@@ -207,9 +193,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isByteLength(options?: IsByteLengthOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isByteLength(toString(value), options),
+      (value) => validator.isByteLength(value, options),
       { ...options },
-      "isByteLength"
+      validator.isByteLength.name
     );
 
     return this.chain;
@@ -217,9 +203,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isCreditCard(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isCreditCard(toString(value)),
+      validator.isCreditCard,
       {},
-      "isCreditCard"
+      validator.isCreditCard.name
     );
 
     return this.chain;
@@ -227,9 +213,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isCurrency(options?: IsCurrencyOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isCurrency(toString(value), options),
+      (value) => validator.isCurrency(value, options),
       { ...options },
-      "isCurrency"
+      validator.isCurrency.name
     );
 
     return this.chain;
@@ -237,9 +223,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isEtheriumAddress(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isEthereumAddress(toString(value)),
+      validator.isEthereumAddress,
       {},
-      "isEtheriumAddress"
+      validator.isEthereumAddress.name
     );
 
     return this.chain;
@@ -247,9 +233,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isBtcAddress(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isBtcAddress(toString(value)),
+      validator.isBtcAddress,
       {},
-      "isBtcAddress"
+      validator.isBtcAddress.name
     );
 
     return this.chain;
@@ -257,9 +243,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isDataURI(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isDataURI(toString(value)),
+      validator.isDataURI,
       {},
-      "isDataURI"
+      validator.isDataURI.name
     );
 
     return this.chain;
@@ -267,9 +253,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isDate(options?: IsDateOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isDate(toString(value), options),
+      (value) => validator.isDate(value, options),
       { ...options },
-      "isDate"
+      validator.isDate.name
     );
 
     return this.chain;
@@ -277,9 +263,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isDecimal(options?: IsDecimalOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isDecimal(toString(value), options),
+      (value) => validator.isDecimal(value, options),
       { ...options },
-      "isDecimal"
+      validator.isDecimal.name
     );
 
     return this.chain;
@@ -287,9 +273,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isDivisibleBy(number: number): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isDivisibleBy(toString(value), number),
+      (value) => validator.isDivisibleBy(value, number),
       { number },
-      "isDivisibleBy"
+      validator.isDivisibleBy.name
     );
 
     return this.chain;
@@ -297,9 +283,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isEmail(options?: IsEmailOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isEmail(toString(value), options),
+      (value) => validator.isEmail(value, options),
       { ...options },
-      "isEmail"
+      validator.isEmail.name
     );
 
     return this.chain;
@@ -307,9 +293,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isEmpty(options?: IsEmptyOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isEmpty(toString(value), options),
+      (value) => validator.isEmpty(value),
       { ...options },
-      "isEmpty"
+      validator.isEmpty.name
     );
 
     return this.chain;
@@ -317,9 +303,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isFloat(options?: IsFloatOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isFloat(toString(value), options),
+      (value) => validator.isFloat(value, options),
       { ...options },
-      "isFloat"
+      validator.isFloat.name
     );
 
     return this.chain;
@@ -327,9 +313,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isFQDN(options?: IsFQDNOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isFQDN(toString(value), options),
+      (value) => validator.isFQDN(value, options),
       { ...options },
-      "isFQDN"
+      validator.isFQDN.name
     );
 
     return this.chain;
@@ -337,9 +323,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isFullWidth(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isFullWidth(toString(value)),
+      validator.isFullWidth,
       {},
-      "isFullWidth"
+      validator.isFullWidth.name
     );
 
     return this.chain;
@@ -347,9 +333,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isHalfWidth(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isHalfWidth(toString(value)),
+      validator.isHalfWidth,
       {},
-      "isHalfWidh"
+      validator.isHalfWidth.name
     );
 
     return this.chain;
@@ -357,9 +343,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isHash(algorithm: HashAlgorithm): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isHash(toString(value), algorithm),
+      (value) => validator.isHash(value, algorithm),
       { algorithm },
-      "isHash"
+      validator.isHash.name
     );
 
     return this.chain;
@@ -367,9 +353,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isHexadecimal(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isHexadecimal(toString(value)),
+      validator.isHexadecimal,
       {},
-      "isHexadecimal"
+      validator.isHexadecimal.name
     );
 
     return this.chain;
@@ -377,40 +363,35 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isHexColor(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isHexColor(toString(value)),
+      validator.isHexColor,
       {},
-      "isHexColor"
+      validator.isHexColor.name
     );
 
     return this.chain;
   }
 
   isHSL(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isHSL(toString(value)),
-      {},
-      "isHSL"
-    );
+    this.addStandartValidator(validator.isHSL, {}, validator.isHSL.name);
 
     return this.chain;
   }
 
   isRgbColor(includePercentValues?: boolean): Chain {
     this.addStandartValidator(
-      async (value: any) =>
-        validator.isRgbColor(toString(value), includePercentValues),
+      (value) => validator.isRgbColor(value, includePercentValues),
       { includePercentValues },
-      "isRgbColor"
+      validator.isRgbColor.name
     );
 
     return this.chain;
   }
 
-  isIn(values: any[]): Chain {
+  isIn(values: unknown[]): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isIn(toString(value), values),
+      (value) => validator.isIn(value, values),
       { values },
-      "isIn"
+      validator.isIn.name
     );
 
     return this.chain;
@@ -418,9 +399,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isInt(options?: IsIntOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isInt(toString(value), options),
+      (value) => validator.isInt(value, options),
       { ...options },
-      "isInt"
+      validator.isInt.name
     );
 
     return this.chain;
@@ -428,9 +409,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isIP(version?: IPVersion): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isIP(toString(value), version),
+      (value) => validator.isIP(value, version),
       { version },
-      "isIP"
+      validator.isIP.name
     );
 
     return this.chain;
@@ -438,39 +419,31 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isIPRange(version?: IPVersion): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isIPRange(toString(value), version),
+      (value) => validator.isIPRange(value, version),
       { version },
-      "isIPRange"
+      validator.isIPRange.name
     );
 
     return this.chain;
   }
 
   isEAN(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isEAN(toString(value)),
-      {},
-      "isEAN"
-    );
+    this.addStandartValidator(validator.isEAN, {}, validator.isEAN.name);
 
     return this.chain;
   }
 
   isISIN(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isISIN(toString(value)),
-      {},
-      "isISIN"
-    );
+    this.addStandartValidator(validator.isISIN, {}, validator.isISIN.name);
 
     return this.chain;
   }
 
   isISO31661Alpha2(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isISO31661Alpha2(toString(value)),
+      validator.isISO31661Alpha2,
       {},
-      "isISO31661Alpha2"
+      validator.isISO31661Alpha2.name
     );
 
     return this.chain;
@@ -478,9 +451,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isISO31661Alpha3(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isISO31661Alpha3(toString(value)),
+      validator.isISO31661Alpha3,
       {},
-      "isISO31661Alpha3"
+      validator.isISO31661Alpha3.name
     );
 
     return this.chain;
@@ -488,9 +461,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isISO8601(options?: IsISO8601Options): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isISO8601(toString(value), options),
+      (value) => validator.isISO8601(value, options),
       { ...options },
-      "isISO8601"
+      validator.isISO8601.name
     );
 
     return this.chain;
@@ -498,59 +471,47 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isISSN(options?: IsISSNOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isISSN(toString(value), options),
+      (value) => validator.isISSN(value, options),
       { ...options },
-      "isISSN"
+      validator.isISIN.name
     );
 
     return this.chain;
   }
 
   isISRC(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isISRC(toString(value)),
-      {},
-      "isISRC"
-    );
+    this.addStandartValidator(validator.isISRC, {}, validator.isISRC.name);
 
     return this.chain;
   }
 
   isRFC3339(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isRFC3339(toString(value)),
+      validator.isRFC3339,
       {},
-      "isRFC3339"
+      validator.isRFC3339.name
     );
 
     return this.chain;
   }
 
   isJSON(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isJSON(toString(value)),
-      {},
-      "isJSON"
-    );
+    this.addStandartValidator(validator.isJSON, {}, validator.isJSON.name);
 
     return this.chain;
   }
 
   isJWT(): Chain {
-    this.addStandartValidator(
-      async (value: any) => validator.isJWT(toString(value)),
-      {},
-      "isJWT"
-    );
+    this.addStandartValidator(validator.isJWT, {}, validator.isJWT.name);
 
     return this.chain;
   }
 
   isLatLong(): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isLatLong(toString(value)),
+      validator.isLatLong,
       {},
-      "isLatLong"
+      validator.isLatLong.name
     );
 
     return this.chain;
@@ -558,94 +519,250 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isLength(options?: IsLengthOptions): Chain {
     this.addStandartValidator(
-      async (value: any) => validator.isLength(toString(value), options),
+      (value) => validator.isLength(value, options),
       { ...options },
-      "isLength"
+      validator.isLength.name
     );
 
     return this.chain;
   }
   isLocale(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(validator.isLocale, {}, validator.isLocale.name);
+
+    return this.chain;
   }
+
   isLowercase(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isLowercase,
+      {},
+      validator.isLowercase.name
+    );
+
+    return this.chain;
   }
+
   isMACAddress(options?: IsMACAddressOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isMACAddress(value, options),
+      { ...options },
+      validator.isMACAddress.name
+    );
+
+    return this.chain;
   }
+
   isMagnetURI(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isMagnetURI,
+      {},
+      validator.isMagnetURI.name
+    );
+
+    return this.chain;
   }
+
   isMD5(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(validator.isMD5, {}, validator.isMD5.name);
+
+    return this.chain;
   }
+
   isMimeType(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isMimeType,
+      {},
+      validator.isMimeType.name
+    );
+
+    return this.chain;
   }
-  isMobilePhone(locale: MobilePhoneLocale | MobilePhoneLocale[]): Chain {
-    throw new Error("Method not implemented.");
+
+  isMobilePhone(
+    locale?: "any" | MobilePhoneLocale | MobilePhoneLocale[],
+    options?: IsMobilePhoneOptions
+  ): Chain {
+    this.addStandartValidator(
+      (value) => validator.isMobilePhone(value, locale, options),
+      { locale, ...options },
+      validator.isMobilePhone.name
+    );
+
+    return this.chain;
   }
+
   isMongoId(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isMongoId,
+      {},
+      validator.isMongoId.name
+    );
+
+    return this.chain;
   }
+
   isMultibyte(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isMultibyte,
+      {},
+      validator.isMultibyte.name
+    );
+
+    return this.chain;
   }
+
   isNumeric(options?: IsNumericOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isNumeric(value, options),
+      { ...options },
+      validator.isNumeric.name
+    );
+
+    return this.chain;
   }
+
   isOctal(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(validator.isOctal, {}, validator.isOctal.name);
+
+    return this.chain;
   }
+
   isPassportNumber(countryCode?: PassportCountryCode): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isPassportNumber(value, countryCode),
+      { countryCode },
+      validator.isPassportNumber.name
+    );
+
+    return this.chain;
   }
+
   isPort(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(validator.isPort, {}, validator.isPort.name);
+
+    return this.chain;
   }
-  isPostalCode(locale: PostalCodeLocale): Chain {
-    throw new Error("Method not implemented.");
+
+  isPostalCode(locale: "any" | PostalCodeLocale): Chain {
+    this.addStandartValidator(
+      (value) => validator.isPostalCode(value, locale),
+      { locale },
+      validator.isPostalCode.name
+    );
+
+    return this.chain;
   }
+
   isSemVer(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(validator.isSemVer, {}, validator.isSemVer.name);
+
+    return this.chain;
   }
+
   isStrongPassword(options?: IsStrongPasswordOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isStrongPassword(value, options),
+      { ...options },
+      validator.isStrongPassword.name
+    );
+
+    return this.chain;
   }
+
   isSurrogatePair(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isSurrogatePair,
+      {},
+      validator.isSurrogatePair.name
+    );
+
+    return this.chain;
   }
+
   isURL(options?: IsURLOptions): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isURL(value, options),
+      { ...options },
+      validator.isURL.name
+    );
+
+    return this.chain;
   }
+
   isUppercase(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isUppercase,
+      {},
+      validator.isUppercase.name
+    );
+
+    return this.chain;
   }
+
   isUUID(version?: UUIDVersion): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isUUID(value, version),
+      { version },
+      validator.isUUID.name
+    );
+
+    return this.chain;
   }
+
   isVariableWidth(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      validator.isVariableWidth,
+      {},
+      validator.isVariableWidth.name
+    );
+
+    return this.chain;
   }
+
   isWhitelisted(chars: string | string[]): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(
+      (value) => validator.isWhitelisted(value, chars),
+      { chars },
+      validator.isWhitelisted.name
+    );
+
+    return this.chain;
   }
+
   matches(pattern: RegExp): Chain;
   matches(pattern: string, modifiers?: string): Chain;
   matches(pattern: any, modifiers?: any): Chain {
-    throw new Error("Method not implemented.");
+    let func = (value) => validator.matches(value, pattern);
+    if (pattern instanceof RegExp) {
+      func = (value) => validator.matches(value, pattern);
+    } else if (typeof pattern === "string") {
+      func = (value) => validator.matches(value, pattern, modifiers);
+    } else throw new Error("given pattern is not correct string or RegExp");
+
+    this.addStandartValidator(
+      func,
+      { pattern, modifiers },
+      validator.matches.name
+    );
+
+    return this.chain;
   }
+
   isSlug(): Chain {
-    throw new Error("Method not implemented.");
+    this.addStandartValidator(validator.isSlug, {}, validator.isSlug.name);
+
+    return this.chain;
   }
 
   isString(): Chain {
-    this.addStandartValidator(
-      "invalid type",
-      async (value: any) => typeof value === "string",
-      { type: "string" }
+    this.addItem(
+      new Validator(
+        async (value) => typeof value === "string",
+        { type: "string" },
+        "type"
+      )
     );
+
     return this.chain;
   }
 }

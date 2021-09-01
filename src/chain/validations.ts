@@ -33,14 +33,14 @@ export interface Validations<Return> {
 
   custom(
     handler: ValidationHandler,
-    options?: { args?: any; message?: string }
+    options?: { args?: unknown; message?: string }
   ): Return;
 
   isArray(): Return;
 
   isString(): Return;
 
-  contains(seed: any): Return;
+  contains(seed: unknown): Return;
 
   equals(comparison: string): Return;
 
@@ -109,7 +109,7 @@ export interface Validations<Return> {
 
   isRgbColor(includePercentValues?: boolean): Return;
 
-  isIn(values: any[]): Return;
+  isIn(values: unknown[]): Return;
 
   isInt(options?: IsIntOptions): Return;
 
