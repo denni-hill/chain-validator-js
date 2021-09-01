@@ -4,8 +4,8 @@ import { Context } from "./context/context";
 import { getValueByPath } from "./utils";
 
 async function _validate(
-  objectToValidate: any,
-  schema: any,
+  objectToValidate: unknown,
+  schema: unknown,
   path: string[] = [],
   stopOnFail = false
 ): Promise<ValidationResult> {
@@ -76,8 +76,8 @@ async function _validate(
 }
 
 export async function validate(
-  objectToValidate: any,
-  schema: any,
+  objectToValidate: unknown,
+  schema: unknown,
   stopOnFail = false
 ): Promise<ValidationResult> {
   return await _validate(objectToValidate, schema, [], stopOnFail);
