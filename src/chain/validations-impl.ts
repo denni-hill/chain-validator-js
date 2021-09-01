@@ -736,8 +736,10 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   matches(pattern: RegExp): Chain;
   matches(pattern: string, modifiers?: string): Chain;
-  matches(pattern: any, modifiers?: any): Chain {
-    let func = (value) => validator.matches(value, pattern);
+  matches(pattern: unknown, modifiers?: unknown): Chain {
+    if (modifiers !== undefined && typeof modifiers !== "string")
+      throw new Error("given modifiers is not type of string");
+    let func: { (value: string): boolean };
     if (pattern instanceof RegExp) {
       func = (value) => validator.matches(value, pattern);
     } else if (typeof pattern === "string") {
