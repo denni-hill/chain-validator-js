@@ -7,11 +7,11 @@ export interface Sanitizers<Return> {
 
   unescape(): Return;
 
-  ltrim(): Return;
+  ltrim(chars?: string): Return;
 
   normalizeEmail(options?: NormalizeEmailOptions): Return;
 
-  rtrim(): Return;
+  rtrim(chars?: string): Return;
 
   stripLow(keepNewLines?: boolean): Return;
 
