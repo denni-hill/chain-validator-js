@@ -12,7 +12,7 @@ export const bindAll = <T>(object: T): { [K in keyof T]: T[K] } => {
   return object;
 };
 
-export function toString(value: any, deep = true): string {
+export function toString(value: unknown, deep = true): string {
   if (Array.isArray(value) && value.length && deep) {
     return toString(value[0], false);
   } else if (value instanceof Date) {
@@ -22,14 +22,14 @@ export function toString(value: any, deep = true): string {
       return Object.getPrototypeOf(value).toString.call(value);
     }
     return value.toString();
-  } else if (value == null || (isNaN(value) && !value.length)) {
+  } else if (value == null || (isNaN(Number(value)) && !String(value).length)) {
     return "";
   }
 
   return String(value);
 }
 
-export function getValueByPath(object: any, path: string[]): any {
+export function getValueByPath(object: unknown, path: string[]): unknown {
   let value = object;
   for (const pathPart of path) {
     if (value[pathPart] === undefined) return undefined;

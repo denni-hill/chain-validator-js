@@ -4,6 +4,7 @@ import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
 import { ValidationResult } from "../result";
 import { bindAll, getValueByPath } from "../utils";
+import { Contexter } from "./context-handler";
 import { ContextItem } from "./context-item";
 import { Sanitizer } from "./sanitizer";
 import { Validator } from "./validator";
@@ -68,11 +69,14 @@ export class Context {
       }
     }
 
-    for (const chain of this._queue) {
-      if (chain instanceof Sanitizer) await chain.run(this);
-      else if (chain instanceof Validator) {
-        const err = await chain.run(this);
+    for (const item of this._queue) {
+      if (item instanceof Sanitizer) await item.run(this);
+      else if (item instanceof Validator) {
+        const err = await item.run(this);
         if (err !== undefined) result.errors.push(err);
+        if (result.failed && this.bailed) return result;
+      } else if (item instanceof Contexter) {
+        item.run(this);
         if (result.failed && this.bailed) return result;
       }
     }

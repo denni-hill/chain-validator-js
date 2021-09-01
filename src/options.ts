@@ -748,5 +748,5 @@ export interface NormalizeEmailOptions {
 
 export interface CustomValidatorOptions {
   message?: string;
-  args?: any;
+  args?: Record<string, unknown>;
 }

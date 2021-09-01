@@ -31,7 +31,7 @@ import {
 import validator from "validator";
 import { Context } from "../context/context";
 import { Validator } from "../context/validator";
-import { ValidationHandler } from "../handler/validation-handler";
+import { ValidationHandlerReturner } from "../handler/validation-handler";
 import { Validations } from "./validations";
 import { toString } from "../utils";
 
@@ -51,7 +51,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   protected addStandartValidator(
     func: { (value: string): boolean },
-    args: unknown,
+    args: Record<string, unknown>,
     message: string
   ): void {
     const asyncHandler = async (value: unknown) => func(toString(value));
@@ -65,7 +65,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   custom(
-    handler: { (context: Context): ValidationHandler },
+    handler: ValidationHandlerReturner,
     options?: CustomValidatorOptions
   ): Chain {
     if (options === undefined) options = {};

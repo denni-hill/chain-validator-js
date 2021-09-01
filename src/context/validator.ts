@@ -8,7 +8,7 @@ export class Validator implements ContextItem {
 
   constructor(
     readonly handler: ValidationHandler,
-    readonly args: unknown,
+    readonly args: Record<string, unknown> = {},
     public message: string = "invalid value"
   ) {
     this.args = args;
@@ -28,7 +28,7 @@ export class Validator implements ContextItem {
     return {
       value: context.value,
       message,
-      args: this.args,
+      args: { ...this.args, negate: this.negate },
       path: context.path
     };
   }

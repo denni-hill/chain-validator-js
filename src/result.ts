@@ -1,7 +1,7 @@
 import { ValidationError } from "./error";
 
 export class ValidationResult {
-  validated: any = {};
+  validated: unknown = {};
   errors: ValidationError[] = [];
 
   get passed(): boolean {
