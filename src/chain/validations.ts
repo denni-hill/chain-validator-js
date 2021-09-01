@@ -1,3 +1,4 @@
+import { Context } from "../context/context";
 import { ValidationHandler } from "../handler/validation-handler";
 import {
   AlphaLocale,
@@ -32,7 +33,7 @@ export interface Validations<Return> {
   not(): Validations<Return>;
 
   custom(
-    handler: ValidationHandler,
+    handler: (context: Context) => ValidationHandler,
     options?: { args?: unknown; message?: string }
   ): Return;
 

@@ -1,3 +1,3 @@
 export interface Handler {
-  (value: any, ...args: any[]): any;
+  (value: unknown, ...args: unknown[]): unknown;
 }

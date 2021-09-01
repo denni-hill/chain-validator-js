@@ -54,7 +54,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     args: unknown,
     message: string
   ): void {
-    const asyncHandler = async (value) => func(toString(value));
+    const asyncHandler = async (value: unknown) => func(toString(value));
     const validator = new Validator(asyncHandler, args, message);
     this.addItem(validator);
   }
@@ -64,9 +64,14 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this;
   }
 
-  custom(handler: ValidationHandler, options?: CustomValidatorOptions): Chain {
+  custom(
+    handler: { (context: Context): ValidationHandler },
+    options?: CustomValidatorOptions
+  ): Chain {
     if (options === undefined) options = {};
-    this.addItem(new Validator(handler, options.args, options.message));
+    this.addItem(
+      new Validator(handler(this.context), options.args, options.message)
+    );
     return this.chain;
   }
 

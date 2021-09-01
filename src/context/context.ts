@@ -1,4 +1,4 @@
-import { ContextHandlerImpl } from "../chain/context-handler-impl";
+import { ContextHandlersImpl } from "../chain/context-handlers-impl";
 import { SanitizersImpl } from "../chain/sanitizers-impl";
 import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
@@ -11,17 +11,20 @@ import { Validator } from "./validator";
 export type OptionalParams = { nullable: boolean };
 
 export class Context {
-  protected queue: ContextItem[] = [];
+  protected _queue: ContextItem[] = [];
+  get queue(): ContextItem[] {
+    return [...this.queue];
+  }
   chain: ValidationChain;
   bailed = false;
   optional: OptionalParams;
 
-  objectToValidate: any;
+  objectToValidate: unknown;
   path: string[];
-  value: any;
+  value: unknown;
 
   addItem(item: ContextItem): void {
-    this.queue.push(item);
+    this._queue.push(item);
   }
 
   constructor() {
@@ -32,11 +35,14 @@ export class Context {
       { context: this },
       bindAll(new SanitizersImpl(this, methodsKeeper)),
       bindAll(new ValidationsImpl(this, methodsKeeper)),
-      bindAll(new ContextHandlerImpl(this, methodsKeeper))
+      bindAll(new ContextHandlersImpl(this, methodsKeeper))
     );
   }
 
-  async run(objectToValidate: any, path: string[]): Promise<ValidationResult> {
+  async run(
+    objectToValidate: unknown,
+    path: string[]
+  ): Promise<ValidationResult> {
     this.objectToValidate = objectToValidate;
     this.path = path;
     this.value = getValueByPath(objectToValidate, path);
@@ -62,7 +68,7 @@ export class Context {
       }
     }
 
-    for (const chain of this.queue) {
+    for (const chain of this._queue) {
       if (chain instanceof Sanitizer) await chain.run(this);
       else if (chain instanceof Validator) {
         const err = await chain.run(this);
