@@ -59,6 +59,11 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     this.addItem(validator);
   }
 
+  withMessage(message: string): Chain {
+    this.context.queue[this.context.queue.length - 1].message = message;
+    return this.chain;
+  }
+
   not(): Validations<Chain> {
     this.negateNext = true;
     return this;

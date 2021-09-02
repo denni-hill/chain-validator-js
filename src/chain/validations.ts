@@ -29,6 +29,8 @@ import {
 } from "../options";
 
 export interface Validations<Return> {
+  withMessage(message: string): Return;
+
   not(): Validations<Return>;
 
   custom(
