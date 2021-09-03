@@ -49,7 +49,7 @@ After just copy the contents of build folder to your project and import build() 
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@kylelobo](https://github.com/denni_hill) - Idea & Initial work
+- [@denni_hull](https://github.com/denni_hill) - Idea & Initial work
 
 See also the list of [contributors](https://github.com/denni_hill/chain-validator-js/contributors) who participated in this project.
 
