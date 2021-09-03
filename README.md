@@ -1,7 +1,7 @@
 <div align="center">
 <h1>✔️⛓️❌</h1>
 </div>
-<h3 style="text-align: center; margin-bottom: 20px">chain-validator-js</h3>
+<h3 align="center" style="margin-bottom: 20px">chain-validator-js</h3>
 
 <div align="center">
 
