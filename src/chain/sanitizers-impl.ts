@@ -1,4 +1,7 @@
-import { SanitizerHandler } from "./../handler/sanitizer-handler";
+import {
+  SanitizerHandler,
+  SanitizerHandlerReturner
+} from "./../handler/sanitizer-handler";
 import { Sanitizer } from "./../context/sanitizer";
 import { Context } from "../context/context";
 import { Sanitizers } from "./sanitizers";
@@ -25,6 +28,18 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
       func(toString(value));
     const sanitizer = new Sanitizer(asyncHandler, args, message);
     this.addItem(sanitizer);
+  }
+
+  customSanitizer(
+    handler: SanitizerHandlerReturner,
+    options?: { args?: unknown; message?: string }
+  ): Chain {
+    if (options === undefined) options = {};
+    this.addItem(
+      new Sanitizer(handler(this.context), options.args, options.message)
+    );
+
+    return this.chain;
   }
 
   blacklist(chars: string): Chain {

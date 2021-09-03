@@ -1,6 +1,12 @@
+import { SanitizerHandlerReturner } from "../handler/sanitizer-handler";
 import { NormalizeEmailOptions } from "../options";
 
 export interface Sanitizers<Return> {
+  customSanitizer(
+    handler: SanitizerHandlerReturner,
+    options?: { args?: unknown; message?: string }
+  ): Return;
+
   blacklist(chars: string): Return;
 
   escape(): Return;

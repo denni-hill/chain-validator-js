@@ -61,11 +61,13 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   withMessage(message: string): Chain {
     this.context.queue[this.context.queue.length - 1].message = message;
+
     return this.chain;
   }
 
   not(): Validations<Chain> {
     this.negateNext = true;
+
     return this;
   }
 
@@ -77,6 +79,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     this.addItem(
       new Validator(handler(this.context), options.args, options.message)
     );
+
     return this.chain;
   }
 
@@ -88,6 +91,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
         "type"
       )
     );
+
     return this.chain;
   }
 
@@ -97,6 +101,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
       { seed },
       validator.contains.name
     );
+
     return this.chain;
   }
 
@@ -139,11 +144,13 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
       { locale, ...options },
       validator.isAlphanumeric.name
     );
+
     return this.chain;
   }
 
   isAscii(): Chain {
     this.addStandartValidator(validator.isAscii, {}, validator.isAscii.name);
+
     return this.chain;
   }
 
