@@ -1,7 +1,7 @@
 {
-  "name": "chain-validator",
+  "name": "chain-validator-js",
   "version": "1.0.0",
-  "description": "easy to integrate validator.js based validation with chain syntax, informative validation result, unwanted data cutting and sanitizing",
+  "description": "Easy to integrate validator.js based validation with chain syntax, informative validation result, unwanted data cutting and sanitizing",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc -p ./tsconfig.json -w"
@@ -13,7 +13,7 @@
     "sanitizing"
   ],
   "author": "Denis Saenko",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "validator": "^13.6.0"
   },
@@ -29,5 +29,13 @@
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.19",
     "typescript": "^4.3.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denni-hill/chain-validator-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/denni-hill/chain-validator-js/issues"
+  },
+  "homepage": "https://github.com/denni-hill/chain-validator-js#readme"
 }
