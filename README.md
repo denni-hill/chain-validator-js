@@ -33,7 +33,7 @@ This tool is developed to write easy-to-[read, write, reuse] data validation. It
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
-### Prerequisites
+## Installation
 
 To install this library you can use npm or build it from sources.
 
@@ -46,6 +46,62 @@ npm install chain-validator-js --save
 ## Code examples
 
 Validate any data
+
+### Strings
+
+```JS
+validate(
+    "validate me", 
+    build().isString().contains("me")
+).then(result => console.log(result));
+```
+
+Expected output
+
+```JSON
+{
+  "validated": "validate me",
+  "errors": []
+}
+```
+
+### Arrays
+
+```JS
+validate(["validate", "123"],
+    [
+        build().isArray(),
+        build().isNumeric().withMessage("Given value is not type of numeric")
+    ]).then(result => console.log(JSON.stringify(result)));
+```
+
+```JSON
+{
+  "validated": [],
+  "errors": [
+    {
+      "value": "validate",
+      "message": "Given value is not type of numeric",
+      "args": {
+        "negate": false
+      },
+      "path": [
+        "0"
+      ]
+    },
+    {
+      "value": "me",
+      "message": "Given value is not type of numeric",
+      "args": {
+        "negate": false
+      },
+      "path": [
+        "1"
+      ]
+    }
+  ]
+}
+```
 
 ## ✍️ Authors <a name = "authors"></a>
 

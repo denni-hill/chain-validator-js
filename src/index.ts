@@ -46,7 +46,7 @@ async function _validate(
           stopOnFail
         );
         if (arrayElementValidationResult.passed)
-          validatedArray[key] = arrayElementValidationResult.validated;
+          validatedArray.push(arrayElementValidationResult.validated);
         else result.errors.push(...arrayElementValidationResult.errors);
       }
       result.validated = validatedArray;
