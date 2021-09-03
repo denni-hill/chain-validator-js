@@ -1,18 +1,21 @@
 {
    "compilerOptions": {
       "lib": [
-         "es5",
-         "es6"
+         "es2017",
+         "es6",
+         "es7",
+         "dom"
       ],
       "target": "es5",
       "module": "CommonJS" ,
       "moduleResolution": "node",
       "rootDir": "./src",
-      "outDir": "./build",
+      "outDir": "./dist",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": false,
       "esModuleInterop": true,
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "declaration": true
    }
 }  

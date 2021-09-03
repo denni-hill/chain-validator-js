@@ -2,9 +2,10 @@
   "name": "chain-validator-js",
   "version": "1.0.0",
   "description": "Easy to integrate validator.js based validation with chain syntax, informative validation result, unwanted data cutting and sanitizing",
-  "main": "build/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p ./tsconfig.json -w"
+    "build": "tsc"
   },
   "keywords": [
     "validator",
