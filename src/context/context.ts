@@ -14,7 +14,7 @@ export type OptionalParams = { nullable: boolean };
 export class Context {
   protected _queue: ContextItem[] = [];
   get queue(): ContextItem[] {
-    return [...this.queue];
+    return [...this._queue];
   }
   chain: ValidationChain;
   bailed = false;

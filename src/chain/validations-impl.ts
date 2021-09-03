@@ -61,7 +61,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   withMessage(message: string): Chain {
     this.context.queue[this.context.queue.length - 1].message = message;
-
+    console.log(this.context.queue[this.context.queue.length - 1]);
     return this.chain;
   }
 
