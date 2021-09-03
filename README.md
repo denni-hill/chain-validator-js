@@ -35,17 +35,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-For today to get this package you should clone this repository. <br>
+To install this library you can use npm or build it from sources.
 
-Then you should run few commands written below:
+Using npm:
 
 ```
-npm install
-
-npm run build
+npm install chain-validator-js --save
 ```
 
-After just copy the contents of build folder to your project and import build() and validate() functions from destination folder. As it's dependency, validator.js npm package, this package also can be used both in browser and nodejs environment.
+## Code examples
+
+Validate any data
 
 ## ✍️ Authors <a name = "authors"></a>
 
