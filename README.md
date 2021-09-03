@@ -37,7 +37,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 For today to get this package you should clone this repository. <br>
 
-Then you should run few commands written below
+Then you should run few commands written below:
 
 ```
 npm install
@@ -49,11 +49,11 @@ After just copy the contents of build folder to your project and import build() 
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@denni_hill](https://github.com/denni-hill) - Idea & Initial work
+- [@denni_hill](https://github.com/denni-hill) - Idea & Initial work.
 
 See also the list of [contributors](https://github.com/denni-hill/chain-validator-js/contributors) who participated in this project.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - [validator.js](https://www.npmjs.com/package/validator) - all the included validation and sanitizing methods.
-- Inspired by [express-validator](https://github.com/express-validator/express-validator) - has the almost same functional, except the lack of informative errors
+- Inspired by [express-validator](https://github.com/express-validator/express-validator) - has the almost same functional, except the lack of informative errors.
