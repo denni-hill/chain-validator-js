@@ -43,9 +43,9 @@ Using npm:
 npm install chain-validator-js --save
 ```
 
-## Code examples
+# Code examples
 
-Validate any data
+## Validate any data
 
 ### Strings
 
@@ -55,9 +55,7 @@ validate(
     build().isString().contains("me")
 ).then(result => console.log(result));
 ```
-
-Expected output
-
+#### Expected output
 ```JSON
 {
   "validated": "validate me",
@@ -74,10 +72,12 @@ validate(["validate", "123"],
         build().isNumeric().withMessage("Given value is not type of numeric")
     ]).then(result => console.log(JSON.stringify(result)));
 ```
-
+#### Expected output
 ```JSON
 {
-  "validated": [],
+  "validated": [
+    "123"
+  ],
   "errors": [
     {
       "value": "validate",
@@ -88,20 +88,89 @@ validate(["validate", "123"],
       "path": [
         "0"
       ]
-    },
-    {
-      "value": "me",
-      "message": "Given value is not type of numeric",
-      "args": {
-        "negate": false
-      },
-      "path": [
-        "1"
-      ]
     }
   ]
 }
 ```
+
+### Objects
+
+```JS
+const authorValidation = () => {
+    return {
+        firstName: build().isString(),
+        lastName: build().isString()
+    }
+}
+
+const bookValidation = () => {
+    return {
+        name: build().isString(),
+        authors: [build().isArray(), authorValidation()]
+    }
+}
+
+const data = {
+    firstName: "Foo",
+    lastName: "Bar",
+    books: [
+        {
+            name: "Book1",
+            authors: [{
+                firstName: "Some",
+                lastName: "Author"
+            }]
+        },
+        {
+            name: "Book2",
+            authors: [{
+                firstName: "Another",
+                lastName: "Author"
+            }]
+        }
+    ]
+}
+
+const rules = {
+    firstName: build().isString(),
+    lastName: build().isString(),
+    books: [build().isArray(), bookValidation()]
+}
+
+validate(data, rules).then(result => console.log(JSON.stringify(result)));
+```
+#### Expected output
+```JSON
+{
+  "validated": {
+    "firstName": "Foo",
+    "lastName": "Bar",
+    "books": [
+      {
+        "name": "Book1",
+        "authors": [
+          {
+            "firstName": "Some",
+            "lastName": "Author"
+          }
+        ]
+      },
+      {
+        "name": "Book2",
+        "authors": [
+          {
+            "firstName": "Another",
+            "lastName": "Author"
+          }
+        ]
+      }
+    ]
+  },
+  "errors": []
+}
+```
+
+In previous example functions authorValidation and bookValidation are functions that returns validation rules, that can be used as part of another validation rules (like authorValidation is a part of bookValidation). This can be super-useful for reusing and mixing rules.
 
 ## ✍️ Authors <a name = "authors"></a>
 
