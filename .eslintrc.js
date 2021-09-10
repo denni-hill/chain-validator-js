@@ -14,6 +14,7 @@ module.exports = {
         trailingComma: "none"
       }
     ],
+    "@typescript-eslint/no-explicit-any": "off",
     quotes: ["error", "double"],
     semi: ["error", "always"],
     "no-console": "off"
