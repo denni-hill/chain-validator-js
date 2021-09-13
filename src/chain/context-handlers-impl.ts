@@ -1,7 +1,6 @@
+import { Condition } from "../context/condition";
 import { Context, OptionalParams } from "../context/context";
-import { Contexter } from "../context/context-handler";
-import { Validator } from "../context/validator";
-import { ValidationHandlerReturner } from "../handler/validation-handler";
+import { Contexter } from "../context/contexter";
 import { ContextHandlers } from "./context-handlers";
 import { ValidationChain } from "./validation-chain";
 
@@ -24,16 +23,14 @@ export class ContextHandlersImpl<Chain> implements ContextHandlers<Chain> {
     return this.chain;
   }
 
-  if(condition: ValidationHandlerReturner | ValidationChain): Chain {
-    if ((condition as ValidationChain).context !== undefined) {
-      const context = (condition as ValidationChain).context;
-      context.queue.forEach(this.context.addItem);
-      this.bail();
-    } else {
-      this.context.addItem(
-        new Validator((condition as ValidationHandlerReturner)(this.context))
-      );
-    }
+  if(
+    conditionSchema: unknown,
+    options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
+  ): Chain {
+    this.context.addItem(
+      new Condition(conditionSchema, options.ifTrue, options.ifTrue)
+    );
+
     return this.chain;
   }
 

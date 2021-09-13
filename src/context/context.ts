@@ -4,10 +4,11 @@ import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
 import { ValidationResult } from "../result";
 import { bindAll, getValueByPath } from "../utils";
-import { Contexter } from "./context-handler";
+import { Contexter } from "./contexter";
 import { ContextItem } from "./context-item";
 import { Sanitizer } from "./sanitizer";
 import { Validator } from "./validator";
+import { Condition } from "./condition";
 
 export type OptionalParams = { nullable: boolean };
 
@@ -20,7 +21,7 @@ export class Context {
   bailed = false;
   optional: OptionalParams;
 
-  objectToValidate: unknown;
+  objectToValidate: any;
   path: string[];
   value: unknown;
 
@@ -76,7 +77,12 @@ export class Context {
         if (err !== undefined) result.errors.push(err);
         if (result.failed && this.bailed) return result;
       } else if (item instanceof Contexter) {
-        item.run(this);
+        await item.run(this);
+        if (result.failed && this.bailed) return result;
+      } else if (item instanceof Condition) {
+        const conditionResult = await item.run(this);
+        result.errors.push(...conditionResult.errors);
+        this.value = conditionResult.validated;
         if (result.failed && this.bailed) return result;
       }
     }

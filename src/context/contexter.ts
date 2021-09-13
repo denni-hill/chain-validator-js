@@ -6,7 +6,7 @@ export class Contexter implements ContextItem {
   message = "invalid value";
   constructor(protected readonly handler: ContexterHandler) {}
 
-  run(context: Context): Promise<void> {
-    return this.handler(context);
+  async run(context: Context): Promise<void> {
+    return await this.handler(context);
   }
 }

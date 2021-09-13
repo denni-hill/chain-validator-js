@@ -3,7 +3,9 @@ import { ValidationChain } from "./chain/validation-chain";
 import { Context } from "./context/context";
 import { getValueByPath } from "./utils";
 
-async function _validate(
+export type ArrayValidationSchema = [unknown, unknown];
+
+export async function validate(
   objectToValidate: unknown,
   schema: unknown,
   path: string[] = [],
@@ -25,7 +27,7 @@ async function _validate(
     let arrayFieldValidationPassed = true;
     let arrayValidationSchema;
     if (schema.length === 2) {
-      const arrayFieldValidationResult = await _validate(
+      const arrayFieldValidationResult = await validate(
         objectToValidate,
         schema[0],
         [...path],
@@ -39,7 +41,7 @@ async function _validate(
     if (arrayFieldValidationPassed && Array.isArray(arrayToValidate)) {
       const validatedArray = [];
       for (const key in arrayToValidate) {
-        const arrayElementValidationResult = await _validate(
+        const arrayElementValidationResult = await validate(
           objectToValidate,
           arrayValidationSchema,
           [...path, key],
@@ -53,7 +55,7 @@ async function _validate(
     } else result.validated = [];
   } else if (typeof schema === "object") {
     for (const schemaKey in schema) {
-      const subSchemaValidationResult = await _validate(
+      const subSchemaValidationResult = await validate(
         objectToValidate,
         schema[schemaKey],
         [...path, schemaKey],
@@ -73,14 +75,6 @@ async function _validate(
   }
 
   return result;
-}
-
-export async function validate(
-  objectToValidate: unknown,
-  schema: unknown,
-  stopOnFail = false
-): Promise<ValidationResult> {
-  return await _validate(objectToValidate, schema, [], stopOnFail);
 }
 
 export function build(): ValidationChain {
