@@ -1,6 +1,6 @@
 {
   "name": "chain-validator-js",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Easy to integrate validator.js based validation with chain syntax, informative validation result, unwanted data cutting and sanitizing",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
