@@ -86,8 +86,8 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     this.addItem(
       new Validator(
         async (value: unknown) => Array.isArray(value),
-        { type: "array" },
-        "type"
+        {},
+        this.isArray.name
       )
     );
 
