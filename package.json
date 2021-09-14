@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc -p ./tsconfig.json -w"
+    "dev": "tsc -p ./tsconfig.json -w",
+    "prepublishOnly": "tsc"
   },
   "keywords": [
     "validator",
