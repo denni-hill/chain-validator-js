@@ -7,15 +7,18 @@ import { ContextItem } from "./context-item";
 export class Condition implements ContextItem {
   message = "invalid value";
   constructor(
-    protected readonly conditionSchema: unknown,
+    protected readonly condition: unknown,
     protected readonly ifTrue: ValidationChain,
-    protected readonly ifFalse: ValidationChain
+    protected readonly ifFalse: ValidationChain,
+    protected readonly validateSelf: boolean
   ) {}
 
   async run(context: Context): Promise<ValidationResult> {
     const ifConditionResult = await validate(
       context.objectToValidate,
-      this.conditionSchema
+      this.condition,
+      this.validateSelf ? context.path : [],
+      true
     );
 
     if (ifConditionResult.passed && this.ifTrue !== undefined)

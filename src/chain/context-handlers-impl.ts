@@ -28,7 +28,18 @@ export class ContextHandlersImpl<Chain> implements ContextHandlers<Chain> {
     options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
   ): Chain {
     this.context.addItem(
-      new Condition(conditionSchema, options.ifTrue, options.ifTrue)
+      new Condition(conditionSchema, options.ifTrue, options.ifTrue, false)
+    );
+
+    return this.chain;
+  }
+
+  ifSelf(
+    conditionChain: ValidationChain,
+    options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
+  ): Chain {
+    this.context.addItem(
+      new Condition(conditionChain, options.ifTrue, options.ifTrue, false)
     );
 
     return this.chain;

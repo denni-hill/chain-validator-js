@@ -3,12 +3,22 @@ import { ValidationChain } from "./validation-chain";
 
 export interface ContextHandlers<Chain> {
   bail(): Chain;
+
   if(
-    condition: unknown,
+    conditionSchema: unknown,
     options: {
       ifTrue?: ValidationChain;
       ifFalse?: ValidationChain;
     }
   ): Chain;
+
+  ifSelf(
+    conditionChain: ValidationChain,
+    options: {
+      ifTrue?: ValidationChain;
+      ifFalse?: ValidationChain;
+    }
+  ): Chain;
+
   optional(options?: Partial<OptionalParams> | true): Chain;
 }
