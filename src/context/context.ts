@@ -43,7 +43,8 @@ export class Context {
 
   async run(
     objectToValidate: unknown,
-    path: string[]
+    path: string[],
+    stopOnFail: boolean
   ): Promise<ValidationResult> {
     this.objectToValidate = objectToValidate;
     this.path = path;
@@ -75,16 +76,15 @@ export class Context {
       else if (item instanceof Validator) {
         const err = await item.run(this);
         if (err !== undefined) result.errors.push(err);
-        if (result.failed && this.bailed) return result;
       } else if (item instanceof Contexter) {
         await item.run(this);
-        if (result.failed && this.bailed) return result;
       } else if (item instanceof Condition) {
         const conditionResult = await item.run(this);
         result.errors.push(...conditionResult.errors);
         this.value = conditionResult.validated;
-        if (result.failed && this.bailed) return result;
       }
+
+      if (result.failed && (this.bailed || stopOnFail)) return result;
     }
 
     if (result.passed) result.validated = this.value;

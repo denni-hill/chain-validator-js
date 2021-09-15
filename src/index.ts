@@ -17,7 +17,7 @@ export async function validate(
   const result = new ValidationResult([]);
   if ((schema as ValidationChain).context instanceof Context) {
     const context: Context = (schema as ValidationChain).context;
-    return await context.run(objectToValidate, [...path]);
+    return await context.run(objectToValidate, [...path], stopOnFail);
   } else if (Array.isArray(schema)) {
     if (schema.length === 0 || schema.length > 2)
       throw new Error(
