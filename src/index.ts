@@ -14,7 +14,7 @@ export async function validate(
   if (schema === undefined) throw "Validation schema is undefined!";
   if (schema === null) throw "Validation schema cannot be null!";
 
-  const result = new ValidationResult([]);
+  const result = new ValidationResult();
   if ((schema as ValidationChain).context instanceof Context) {
     const context: Context = (schema as ValidationChain).context;
     return await context.run(objectToValidate, [...path], stopOnFail);
