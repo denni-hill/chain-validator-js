@@ -66,18 +66,18 @@ validate(
 ### Arrays
 
 ```JS
-validate(["validate", "123"],
-    [
-        build().isArray(),
-        build().isNumeric().withMessage("Given value is not type of numeric")
-    ]).then(result => console.log(JSON.stringify(result)));
+validate(
+  ["validate", "123"],
+  build().isArray(
+    build().isNumeric().withMessage("Given value is not type of numeric")
+  )
+).then((result) => console.log(JSON.stringify(result)));
+
 ```
 #### Expected output
 ```JSON
 {
-  "validated": [
-    "123"
-  ],
+  "validated": {},
   "errors": [
     {
       "value": "validate",
@@ -106,7 +106,7 @@ const authorValidation = () => {
 const bookValidation = () => {
     return {
         name: build().isString(),
-        authors: [build().isArray(), authorValidation()]
+        authors: build().isArray(authorValidation())
     }
 }
 
@@ -134,7 +134,7 @@ const data = {
 const rules = {
     firstName: build().isString(),
     lastName: build().isString(),
-    books: [build().isArray(), bookValidation()]
+    books: build().isArray(bookValidation())
 }
 
 validate(data, rules).then(result => console.log(JSON.stringify(result)));
