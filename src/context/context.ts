@@ -91,7 +91,8 @@ export class Context {
       ) {
         const subValidationResult = await item.run(this);
         result.errors.push(...subValidationResult.errors);
-        this.value = subValidationResult.validated;
+        if (subValidationResult.passed)
+          this.value = subValidationResult.validated;
       }
 
       if (result.failed && (this.bailed || stopOnFail)) return result;
