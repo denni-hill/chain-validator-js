@@ -2,7 +2,7 @@ import { SanitizerHandler } from "../handler/sanitizer-handler";
 import { Context } from "./context";
 import { ContextItem } from "./context-item";
 
-export class Sanitizer implements ContextItem {
+export class SanitizerContextItem implements ContextItem {
   constructor(
     readonly handler: SanitizerHandler,
     readonly args: unknown,

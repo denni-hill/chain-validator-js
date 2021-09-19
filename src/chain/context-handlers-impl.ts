@@ -1,6 +1,6 @@
-import { Condition } from "../context/condition";
+import { ConditionContextItem } from "../context/condition-context-item";
 import { Context, OptionalParams } from "../context/context";
-import { Contexter } from "../context/contexter";
+import { ContexterContextItem } from "../context/contexter-context-item";
 import { ContextHandlers } from "./context-handlers";
 import { ValidationChain } from "./validation-chain";
 
@@ -10,13 +10,13 @@ export class ContextHandlersImpl<Chain> implements ContextHandlers<Chain> {
     private readonly chain: Chain
   ) {}
 
-  addItem(contexter: Contexter): void {
+  addItem(contexter: ContexterContextItem): void {
     this.context.addItem(contexter);
   }
 
   bail(): Chain {
     this.addItem(
-      new Contexter(async (context: Context) => {
+      new ContexterContextItem(async (context: Context) => {
         context.bailed = true;
       })
     );
@@ -28,7 +28,12 @@ export class ContextHandlersImpl<Chain> implements ContextHandlers<Chain> {
     options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
   ): Chain {
     this.context.addItem(
-      new Condition(conditionSchema, options.ifTrue, options.ifTrue, false)
+      new ConditionContextItem(
+        conditionSchema,
+        options.ifTrue,
+        options.ifTrue,
+        false
+      )
     );
 
     return this.chain;
@@ -39,7 +44,12 @@ export class ContextHandlersImpl<Chain> implements ContextHandlers<Chain> {
     options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
   ): Chain {
     this.context.addItem(
-      new Condition(conditionChain, options.ifTrue, options.ifTrue, true)
+      new ConditionContextItem(
+        conditionChain,
+        options.ifTrue,
+        options.ifTrue,
+        true
+      )
     );
 
     return this.chain;

@@ -4,8 +4,7 @@ import { ValidationResult } from "../result";
 import { Context } from "./context";
 import { ContextItem } from "./context-item";
 
-export class Condition implements ContextItem {
-  message = "invalid value";
+export class ConditionContextItem implements ContextItem {
   constructor(
     protected readonly condition: unknown,
     protected readonly ifTrue: ValidationChain,

@@ -30,10 +30,11 @@ import {
 } from "./../options";
 import validator from "validator";
 import { Context } from "../context/context";
-import { Validator } from "../context/validator";
+import { ValidatorContextItem } from "../context/validator-context-item";
 import { ValidationHandlerReturner } from "../handler/validation-handler";
 import { Validations } from "./validations";
 import { toString } from "../utils";
+import { ArrayContextItem } from "../context/array-context-item";
 
 export class ValidationsImpl<Chain> implements Validations<Chain> {
   protected negateNext = false;
@@ -43,7 +44,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     protected readonly chain: Chain
   ) {}
 
-  protected addItem(validator: Validator): void {
+  protected addItem(validator: ValidatorContextItem): void {
     validator.negate = this.negateNext;
     this.context.addItem(validator);
     this.negateNext = false;
@@ -55,12 +56,14 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     message: string
   ): void {
     const asyncHandler = async (value: unknown) => func(toString(value));
-    const validator = new Validator(asyncHandler, args, message);
+    const validator = new ValidatorContextItem(asyncHandler, args, message);
     this.addItem(validator);
   }
 
   withMessage(message: string): Chain {
-    this.context.queue[this.context.queue.length - 1].message = message;
+    (
+      this.context.queue[this.context.queue.length - 1] as ValidatorContextItem
+    ).message = message;
     return this.chain;
   }
 
@@ -76,18 +79,47 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   ): Chain {
     if (options === undefined) options = {};
     this.addItem(
-      new Validator(handler(this.context), options.args, options.message)
+      new ValidatorContextItem(
+        handler(this.context),
+        options.args,
+        options.message
+      )
     );
 
     return this.chain;
   }
 
-  isArray(): Chain {
+  isArray(elementValidationSchema?: unknown): Chain {
     this.addItem(
-      new Validator(
+      new ValidatorContextItem(
         async (value: unknown) => Array.isArray(value),
         {},
         this.isArray.name
+      )
+    );
+
+    if (elementValidationSchema !== undefined)
+      this.context.addItem(new ArrayContextItem(elementValidationSchema));
+
+    return this.chain;
+  }
+
+  isArrayLength(options?: { min?: number; max?: number }): Chain {
+    this.isArray();
+
+    if (
+      options === undefined ||
+      (options.min === undefined && options.max === undefined)
+    )
+      options = { min: 1, max: undefined };
+
+    this.addItem(
+      new ValidatorContextItem(
+        async (value: unknown[]) =>
+          (options.min === undefined || value.length >= options.min) &&
+          (options.max === undefined || value.length <= options.max),
+        { ...options },
+        "isArrayLength"
       )
     );
 
@@ -774,7 +806,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isString(): Chain {
     this.addItem(
-      new Validator(
+      new ValidatorContextItem(
         async (value) => typeof value === "string",
         { type: "string" },
         "type"

@@ -4,11 +4,12 @@ import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
 import { ValidationResult } from "../result";
 import { bindAll, getValueByPath } from "../utils";
-import { Contexter } from "./contexter";
+import { ContexterContextItem } from "./contexter-context-item";
 import { ContextItem } from "./context-item";
-import { Sanitizer } from "./sanitizer";
-import { Validator } from "./validator";
-import { Condition } from "./condition";
+import { SanitizerContextItem } from "./sanitizer-context-item";
+import { ValidatorContextItem } from "./validator-context-item";
+import { ConditionContextItem } from "./condition-context-item";
+import { ArrayContextItem } from "./array-context-item";
 
 export type OptionalParams = { nullable: boolean };
 
@@ -52,36 +53,45 @@ export class Context {
 
     const result = new ValidationResult();
 
-    if (this.optional !== undefined) {
-      if (this.value === undefined) {
-        result.validated = undefined;
-        return result;
+    if (this.value === undefined) {
+      if (this.optional !== undefined) result.validated = undefined;
+      else {
+        result.errors.push({
+          value: this.value,
+          message: "required",
+          path: this.path,
+          args: {}
+        });
       }
-      if (this.optional.nullable === true) {
-        if (this.value === null) {
-          result.validated = null;
-          return result;
-        } else
-          result.errors.push({
-            value: this.value,
-            message: "not nullable",
-            path: this.path,
-            args: {}
-          });
+      return result;
+    } else if (this.value === null) {
+      if (this.optional !== undefined && this.optional.nullable)
+        result.validated = null;
+      else {
+        result.errors.push({
+          value: this.value,
+          message: "not nullable",
+          path: this.path,
+          args: {}
+        });
       }
+      return result;
     }
 
     for (const item of this._queue) {
-      if (item instanceof Sanitizer) await item.run(this);
-      else if (item instanceof Validator) {
+      if (item instanceof SanitizerContextItem) await item.run(this);
+      else if (item instanceof ValidatorContextItem) {
         const err = await item.run(this);
         if (err !== undefined) result.errors.push(err);
-      } else if (item instanceof Contexter) {
+      } else if (item instanceof ContexterContextItem) {
         await item.run(this);
-      } else if (item instanceof Condition) {
-        const conditionResult = await item.run(this);
-        result.errors.push(...conditionResult.errors);
-        this.value = conditionResult.validated;
+      } else if (
+        item instanceof ConditionContextItem ||
+        item instanceof ArrayContextItem
+      ) {
+        const subValidationResult = await item.run(this);
+        result.errors.push(...subValidationResult.errors);
+        this.value = subValidationResult.validated;
       }
 
       if (result.failed && (this.bailed || stopOnFail)) return result;

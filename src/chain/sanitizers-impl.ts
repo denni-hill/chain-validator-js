@@ -2,7 +2,7 @@ import {
   SanitizerHandler,
   SanitizerHandlerReturner
 } from "./../handler/sanitizer-handler";
-import { Sanitizer } from "./../context/sanitizer";
+import { SanitizerContextItem } from "../context/sanitizer-context-item";
 import { Context } from "../context/context";
 import { Sanitizers } from "./sanitizers";
 import { NormalizeEmailOptions } from "../options";
@@ -15,7 +15,7 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
     private readonly chain: Chain
   ) {}
 
-  addItem(sanitizer: Sanitizer): void {
+  addItem(sanitizer: SanitizerContextItem): void {
     this.context.addItem(sanitizer);
   }
 
@@ -26,7 +26,7 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
   ): void {
     const asyncHandler: SanitizerHandler = async (value: unknown) =>
       func(toString(value));
-    const sanitizer = new Sanitizer(asyncHandler, args, message);
+    const sanitizer = new SanitizerContextItem(asyncHandler, args, message);
     this.addItem(sanitizer);
   }
 
@@ -36,7 +36,11 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
   ): Chain {
     if (options === undefined) options = {};
     this.addItem(
-      new Sanitizer(handler(this.context), options.args, options.message)
+      new SanitizerContextItem(
+        handler(this.context),
+        options.args,
+        options.message
+      )
     );
 
     return this.chain;
@@ -158,7 +162,11 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
 
   toString(): Chain {
     this.addItem(
-      new Sanitizer(async (value) => String(value), {}, this.toString.name)
+      new SanitizerContextItem(
+        async (value) => String(value),
+        {},
+        this.toString.name
+      )
     );
 
     return this.chain;

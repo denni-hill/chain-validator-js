@@ -3,7 +3,7 @@ import { ValidationHandler } from "../handler/validation-handler";
 import { ContextItem } from "./context-item";
 import { ValidationError } from "../error";
 
-export class Validator implements ContextItem {
+export class ValidatorContextItem implements ContextItem {
   negate = false;
 
   constructor(

@@ -38,7 +38,9 @@ export interface Validations<Return> {
     options?: { args?: unknown; message?: string }
   ): Return;
 
-  isArray(): Return;
+  isArray(elementValidationSchema?: unknown): Return;
+
+  isArrayLength(options?: { min?: number; max?: number }): Return;
 
   isString(): Return;
 

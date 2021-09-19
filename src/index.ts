@@ -1,7 +1,6 @@
 import { ValidationResult } from "./result";
 import { ValidationChain } from "./chain/validation-chain";
 import { Context } from "./context/context";
-import { getValueByPath } from "./utils";
 
 export type ArrayValidationSchema = [unknown, unknown];
 
@@ -18,41 +17,6 @@ export async function validate(
   if ((schema as ValidationChain).context instanceof Context) {
     const context: Context = (schema as ValidationChain).context;
     return await context.run(objectToValidate, [...path], stopOnFail);
-  } else if (Array.isArray(schema)) {
-    if (schema.length === 0 || schema.length > 2)
-      throw new Error(
-        "Array validation schema length must be greater than 0 and less than 2"
-      );
-
-    let arrayFieldValidationPassed = true;
-    let arrayValidationSchema;
-    if (schema.length === 2) {
-      const arrayFieldValidationResult = await validate(
-        objectToValidate,
-        schema[0],
-        [...path],
-        stopOnFail
-      );
-      arrayFieldValidationPassed = arrayFieldValidationResult.passed;
-      arrayValidationSchema = schema[1];
-    } else arrayValidationSchema = schema[0];
-
-    const arrayToValidate = getValueByPath(objectToValidate, [...path]);
-    if (arrayFieldValidationPassed && Array.isArray(arrayToValidate)) {
-      const validatedArray = [];
-      for (const key in arrayToValidate) {
-        const arrayElementValidationResult = await validate(
-          objectToValidate,
-          arrayValidationSchema,
-          [...path, key],
-          stopOnFail
-        );
-        if (arrayElementValidationResult.passed)
-          validatedArray.push(arrayElementValidationResult.validated);
-        else result.errors.push(...arrayElementValidationResult.errors);
-      }
-      result.validated = validatedArray;
-    } else result.validated = [];
   } else if (typeof schema === "object") {
     for (const schemaKey in schema) {
       const subSchemaValidationResult = await validate(
