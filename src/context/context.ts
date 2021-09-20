@@ -1,15 +1,10 @@
-import { ContextHandlersImpl } from "../chain/context-handlers-impl";
+import { ContextersImpl } from "../chain/contexters-impl";
 import { SanitizersImpl } from "../chain/sanitizers-impl";
 import { ValidationChain } from "../chain/validation-chain";
 import { ValidationsImpl } from "../chain/validations-impl";
 import { ValidationResult } from "../result";
 import { bindAll, getValueByPath } from "../utils";
-import { ContexterContextItem } from "./contexter-context-item";
 import { ContextItem } from "./context-item";
-import { SanitizerContextItem } from "./sanitizer-context-item";
-import { ValidatorContextItem } from "./validator-context-item";
-import { ConditionContextItem } from "./condition-context-item";
-import { ArrayContextItem } from "./array-context-item";
 
 export type OptionalParams = { nullable: boolean };
 
@@ -38,7 +33,7 @@ export class Context {
       { context: this },
       bindAll(new SanitizersImpl(this, methodsKeeper)),
       bindAll(new ValidationsImpl(this, methodsKeeper)),
-      bindAll(new ContextHandlersImpl(this, methodsKeeper))
+      bindAll(new ContextersImpl(this, methodsKeeper))
     );
   }
 
@@ -79,26 +74,16 @@ export class Context {
     }
 
     for (const item of this._queue) {
-      if (item instanceof SanitizerContextItem) await item.run(this);
-      else if (item instanceof ValidatorContextItem) {
-        const err = await item.run(this);
-        if (err !== undefined) result.errors.push(err);
-      } else if (item instanceof ContexterContextItem) {
-        await item.run(this);
-      } else if (
-        item instanceof ConditionContextItem ||
-        item instanceof ArrayContextItem
-      ) {
-        const subValidationResult = await item.run(this);
-        result.errors.push(...subValidationResult.errors);
-        if (subValidationResult.passed)
-          this.value = subValidationResult.validated;
-      }
+      const subValidationResult = await item.run(this);
+      if (subValidationResult.passed)
+        this.value = subValidationResult.validated;
+      else result.errors.push(...subValidationResult.errors);
 
       if (result.failed && (this.bailed || stopOnFail)) return result;
     }
 
     if (result.passed) result.validated = this.value;
+
     return result;
   }
 }

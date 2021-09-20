@@ -1,7 +1,7 @@
 import { OptionalParams } from "../context/context";
 import { ValidationChain } from "./validation-chain";
 
-export interface ContextHandlers<Chain> {
+export interface Contexters<Chain> {
   bail(): Chain;
 
   if(

@@ -61,9 +61,14 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   withMessage(message: string): Chain {
-    (
-      this.context.queue[this.context.queue.length - 1] as ValidatorContextItem
-    ).message = message;
+    const lastContextItem = this.context.queue[this.context.queue.length - 1];
+    if (!(lastContextItem instanceof ValidatorContextItem))
+      throw new Error(
+        "Only validators can be modified with withMessage method"
+      );
+
+    lastContextItem.message = message;
+
     return this.chain;
   }
 

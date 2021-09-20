@@ -1,11 +1,11 @@
 import { Context } from "../context/context";
-import { ContextHandlers } from "./context-handlers";
+import { Contexters } from "./contexters";
 import { Sanitizers } from "./sanitizers";
 import { Validations } from "./validations";
 
 export interface ValidationChain
   extends Validations<ValidationChain>,
     Sanitizers<ValidationChain>,
-    ContextHandlers<ValidationChain> {
+    Contexters<ValidationChain> {
   context: Context;
 }

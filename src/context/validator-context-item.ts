@@ -1,7 +1,7 @@
 import { Context } from "./context";
 import { ValidationHandler } from "../handler/validation-handler";
 import { ContextItem } from "./context-item";
-import { ValidationError } from "../error";
+import { ValidationResult } from "../result";
 
 export class ValidatorContextItem implements ContextItem {
   negate = false;
@@ -14,22 +14,30 @@ export class ValidatorContextItem implements ContextItem {
     this.args = args;
   }
 
-  async run(context: Context): Promise<ValidationError> {
-    let message: string = this.message;
+  async run(context: Context): Promise<ValidationResult> {
+    const result = new ValidationResult();
     try {
-      let result = await this.handler(context.value);
-      if (this.negate) result = !result;
+      let handlerResult: boolean = await this.handler(context.value);
+      if (this.negate) handlerResult = !handlerResult;
 
-      if (result) return;
+      if (handlerResult) result.validated = context.value;
+      else {
+        result.errors.push({
+          value: context.value,
+          message: this.message,
+          args: { ...this.args, negate: this.negate },
+          path: context.path
+        });
+      }
     } catch (e) {
-      message = e.message;
+      result.errors.push({
+        value: context.value,
+        message: e.message,
+        args: { ...this.args, negate: this.negate },
+        path: context.path
+      });
     }
 
-    return {
-      value: context.value,
-      message,
-      args: { ...this.args, negate: this.negate },
-      path: context.path
-    };
+    return result;
   }
 }
