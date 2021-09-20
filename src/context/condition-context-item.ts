@@ -1,5 +1,4 @@
 import { validate } from "..";
-import { ValidationChain } from "../chain/validation-chain";
 import { ValidationResult } from "../result";
 import { Context } from "./context";
 import { ContextItem } from "./context-item";
@@ -7,8 +6,8 @@ import { ContextItem } from "./context-item";
 export class ConditionContextItem implements ContextItem {
   constructor(
     protected readonly condition: unknown,
-    protected readonly ifTrue: ValidationChain,
-    protected readonly ifFalse: ValidationChain,
+    protected readonly ifTrue: unknown,
+    protected readonly ifFalse: unknown,
     protected readonly validateSelf: boolean
   ) {}
 

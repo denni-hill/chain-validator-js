@@ -1,5 +1,4 @@
 import { OptionalParams } from "../context/context";
-import { ValidationChain } from "./validation-chain";
 
 export interface Contexters<Chain> {
   bail(): Chain;
@@ -7,16 +6,16 @@ export interface Contexters<Chain> {
   if(
     conditionSchema: unknown,
     options: {
-      ifTrue?: ValidationChain;
-      ifFalse?: ValidationChain;
+      ifTrue?: unknown;
+      ifFalse?: unknown;
     }
   ): Chain;
 
   ifSelf(
-    conditionChain: ValidationChain,
+    conditionSchema: unknown,
     options: {
-      ifTrue?: ValidationChain;
-      ifFalse?: ValidationChain;
+      ifTrue?: unknown;
+      ifFalse?: unknown;
     }
   ): Chain;
 

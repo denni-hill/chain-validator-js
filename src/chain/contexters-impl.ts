@@ -25,7 +25,7 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
 
   if(
     conditionSchema: unknown,
-    options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
+    options: { ifTrue?: unknown; ifFalse?: unknown }
   ): Chain {
     this.context.addItem(
       new ConditionContextItem(
@@ -40,12 +40,12 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
   }
 
   ifSelf(
-    conditionChain: ValidationChain,
-    options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
+    conditionSchema: unknown,
+    options: { ifTrue?: unknown; ifFalse?: unknown }
   ): Chain {
     this.context.addItem(
       new ConditionContextItem(
-        conditionChain,
+        conditionSchema,
         options.ifTrue,
         options.ifTrue,
         true
