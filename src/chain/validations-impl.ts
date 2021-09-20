@@ -99,7 +99,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
       new ValidatorContextItem(
         async (value: unknown) => Array.isArray(value),
         {},
-        this.isArray.name
+        "isArray"
       )
     );
 
@@ -814,7 +814,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
       new ValidatorContextItem(
         async (value) => typeof value === "string",
         { type: "string" },
-        "type"
+        "isString"
       )
     );
 

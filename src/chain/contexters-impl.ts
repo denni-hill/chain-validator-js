@@ -1,6 +1,7 @@
 import { ConditionContextItem } from "../context/condition-context-item";
 import { Context, OptionalParams } from "../context/context";
 import { ContexterContextItem } from "../context/contexter-context-item";
+import { OneOfContextItem } from "../context/one-of-context-item";
 import { Contexters } from "./contexters";
 
 export class ContextersImpl<Chain> implements Contexters<Chain> {
@@ -51,6 +52,16 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
       )
     );
 
+    return this.chain;
+  }
+
+  oneOf(conditionSchemas: unknown[]): Chain {
+    this.context.addItem(new OneOfContextItem(conditionSchemas, false));
+    return this.chain;
+  }
+
+  oneOfSelf(conditionSchema: unknown[]): Chain {
+    this.context.addItem(new OneOfContextItem(conditionSchema, true));
     return this.chain;
   }
 

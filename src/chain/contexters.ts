@@ -1,7 +1,7 @@
 import { OptionalParams } from "../context/context";
 
-export interface Contexters<Chain> {
-  bail(): Chain;
+export interface Contexters<Return> {
+  bail(): Return;
 
   if(
     conditionSchema: unknown,
@@ -9,7 +9,7 @@ export interface Contexters<Chain> {
       ifTrue?: unknown;
       ifFalse?: unknown;
     }
-  ): Chain;
+  ): Return;
 
   ifSelf(
     conditionSchema: unknown,
@@ -17,7 +17,11 @@ export interface Contexters<Chain> {
       ifTrue?: unknown;
       ifFalse?: unknown;
     }
-  ): Chain;
+  ): Return;
 
-  optional(options?: Partial<OptionalParams> | true): Chain;
+  oneOf(...conditionSchemas: unknown[]): Return;
+
+  oneOfSelf(...conditionSchemas: unknown[]): Return;
+
+  optional(options?: Partial<OptionalParams> | true): Return;
 }
