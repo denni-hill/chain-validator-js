@@ -30,7 +30,7 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
       new ConditionContextItem(
         conditionSchema,
         options.ifTrue,
-        options.ifTrue,
+        options.ifFalse,
         false
       )
     );
@@ -46,7 +46,7 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
       new ConditionContextItem(
         conditionSchema,
         options.ifTrue,
-        options.ifTrue,
+        options.ifFalse,
         true
       )
     );
