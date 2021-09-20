@@ -13,11 +13,14 @@ export async function validate(
   if (schema === undefined) throw "Validation schema is undefined!";
   if (schema === null) throw "Validation schema cannot be null!";
 
-  const result = new ValidationResult();
   if ((schema as ValidationChain).context instanceof Context) {
     const context: Context = (schema as ValidationChain).context;
     return await context.run(objectToValidate, [...path], stopOnFail);
-  } else if (typeof schema === "object") {
+  }
+
+  if (typeof schema === "object") {
+    const result = new ValidationResult();
+
     for (const schemaKey in schema) {
       const subSchemaValidationResult = await validate(
         objectToValidate,
@@ -25,20 +28,16 @@ export async function validate(
         [...path, schemaKey],
         stopOnFail
       );
-      if (
-        subSchemaValidationResult.passed ||
-        Array.isArray(subSchemaValidationResult.validated)
-      )
-        result.validated[schemaKey] = subSchemaValidationResult.validated;
 
-      if (subSchemaValidationResult.failed)
-        result.errors.push(...subSchemaValidationResult.errors);
+      if (subSchemaValidationResult.passed)
+        result.validated[schemaKey] = subSchemaValidationResult.validated;
+      else result.errors.push(...subSchemaValidationResult.errors);
     }
-  } else {
-    throw new Error("Validation schema part is invalid type");
+
+    return result;
   }
 
-  return result;
+  throw new Error("Validation schema part is invalid type!");
 }
 
 export function build(): ValidationChain {
