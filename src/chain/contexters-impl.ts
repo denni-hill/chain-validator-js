@@ -55,13 +55,13 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
     return this.chain;
   }
 
-  oneOf(conditionSchemas: unknown[]): Chain {
+  oneOf(...conditionSchemas: unknown[]): Chain {
     this.context.addItem(new OneOfContextItem(conditionSchemas, false));
     return this.chain;
   }
 
-  oneOfSelf(conditionSchema: unknown[]): Chain {
-    this.context.addItem(new OneOfContextItem(conditionSchema, true));
+  oneOfSelf(...conditionSchemas: unknown[]): Chain {
+    this.context.addItem(new OneOfContextItem(conditionSchemas, true));
     return this.chain;
   }
 
