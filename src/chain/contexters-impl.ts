@@ -2,7 +2,6 @@ import { ConditionContextItem } from "../context/condition-context-item";
 import { Context, OptionalParams } from "../context/context";
 import { ContexterContextItem } from "../context/contexter-context-item";
 import { Contexters } from "./contexters";
-import { ValidationChain } from "./validation-chain";
 
 export class ContextersImpl<Chain> implements Contexters<Chain> {
   constructor(
