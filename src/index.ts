@@ -12,6 +12,8 @@ export async function validate(
 ): Promise<ValidationResult> {
   if (schema === undefined) throw "Validation schema is undefined!";
   if (schema === null) throw "Validation schema cannot be null!";
+  if (Array.isArray(schema))
+    throw "Validation schema cannot be array! Use build().isArray(schema?) to validate arrays";
 
   if ((schema as ValidationChain).context instanceof Context) {
     const context: Context = (schema as ValidationChain).context;
@@ -37,7 +39,7 @@ export async function validate(
     return result;
   }
 
-  throw new Error("Validation schema part is invalid type!");
+  throw new Error("Validation schema part has invalid type!");
 }
 
 export function build(): ValidationChain {
