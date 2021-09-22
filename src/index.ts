@@ -10,7 +10,7 @@ export async function validate(
   path: string[] = [],
   stopOnFail = false
 ): Promise<ValidationResult> {
-  if (schema === undefined) throw "Validation schema is undefined!";
+  if (schema === undefined) throw "Validation schema cannot be undefined!";
   if (schema === null) throw "Validation schema cannot be null!";
   if (Array.isArray(schema))
     throw "Validation schema cannot be array! Use build().isArray(schema?) to validate arrays";
