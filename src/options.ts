@@ -745,8 +745,3 @@ export interface NormalizeEmailOptions {
   icloud_lowercase?: boolean;
   icloud_remove_subaddress?: boolean;
 }
-
-export interface CustomValidatorOptions {
-  message?: string;
-  args?: Record<string, unknown>;
-}

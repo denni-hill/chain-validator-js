@@ -1,7 +1,6 @@
 import {
   AlphaLocale,
   AlphanumericLocale,
-  CustomValidatorOptions,
   HashAlgorithm,
   IPVersion,
   IsAlphanumericOptions,
@@ -80,7 +79,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   custom(
     handler: ValidationHandlerReturner,
-    options?: CustomValidatorOptions
+    options?: { args?: Record<string, unknown>; message?: string }
   ): Chain {
     if (options === undefined) options = {};
     this.addItem(

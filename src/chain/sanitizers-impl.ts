@@ -30,11 +30,13 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
   }
 
   customSanitizer(
-    handler: SanitizerHandlerReturner,
-    options?: { args?: unknown }
+    handlerReturner: SanitizerHandlerReturner,
+    options?: { args?: Record<string, unknown> }
   ): Chain {
     if (options === undefined) options = {};
-    this.addItem(new SanitizerContextItem(handler(this.context), options.args));
+    this.addItem(
+      new SanitizerContextItem(handlerReturner(this.context), options.args)
+    );
 
     return this.chain;
   }

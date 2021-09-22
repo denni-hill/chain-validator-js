@@ -34,8 +34,8 @@ export interface Validations<Return> {
   not(): Validations<Return>;
 
   custom(
-    handler: ValidationHandlerReturner,
-    options?: { args?: unknown; message?: string }
+    handlerReturner: ValidationHandlerReturner,
+    options?: { args?: Record<string, unknown>; message?: string }
   ): Return;
 
   isArray(elementValidationSchema?: unknown): Return;

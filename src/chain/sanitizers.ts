@@ -3,8 +3,8 @@ import { NormalizeEmailOptions } from "../options";
 
 export interface Sanitizers<Return> {
   customSanitizer(
-    handler: SanitizerHandlerReturner,
-    options?: { args?: unknown; message?: string }
+    handlerReturner: SanitizerHandlerReturner,
+    options?: { args?: Record<string, unknown> }
   ): Return;
 
   blacklist(chars: string): Return;
