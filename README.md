@@ -97,17 +97,17 @@ validate(
 
 ```JS
 const authorValidation = () => {
-    return {
+    return build().schema({
         firstName: build().isString(),
         lastName: build().isString()
-    }
+    });
 }
 
 const bookValidation = () => {
-    return {
+    return build().schema({
         name: build().isString(),
         authors: build().isArray(authorValidation())
-    }
+    });
 }
 
 const data = {
@@ -131,11 +131,11 @@ const data = {
     ]
 }
 
-const rules = {
+const validationSchema = build().schema({
     firstName: build().isString(),
     lastName: build().isString(),
     books: build().isArray(bookValidation())
-}
+})
 
 validate(data, rules).then(result => console.log(JSON.stringify(result)));
 ```

@@ -34,6 +34,7 @@ import { ValidationHandlerReturner } from "../handler/validation-handler";
 import { Validations } from "./validations";
 import { toString } from "../utils";
 import { ArrayContextItem } from "../context/array-context-item";
+import { ValidationChain } from "./validation-chain";
 
 export class ValidationsImpl<Chain> implements Validations<Chain> {
   protected negateNext = false;
@@ -93,7 +94,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this.chain;
   }
 
-  isArray(elementValidationSchema?: unknown): Chain {
+  isArray(elementValidationChain?: ValidationChain): Chain {
     this.addItem(
       new ValidatorContextItem(
         async (value: unknown) => Array.isArray(value),
@@ -102,8 +103,8 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
       )
     );
 
-    if (elementValidationSchema !== undefined)
-      this.context.addItem(new ArrayContextItem(elementValidationSchema));
+    if (elementValidationChain !== undefined)
+      this.context.addItem(new ArrayContextItem(elementValidationChain));
 
     return this.chain;
   }

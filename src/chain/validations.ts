@@ -27,6 +27,7 @@ import {
   PostalCodeLocale,
   UUIDVersion
 } from "../options";
+import { ValidationChain } from "./validation-chain";
 
 export interface Validations<Return> {
   withMessage(message: string): Return;
@@ -38,7 +39,7 @@ export interface Validations<Return> {
     options?: { args?: Record<string, unknown>; message?: string }
   ): Return;
 
-  isArray(elementValidationSchema?: unknown): Return;
+  isArray(elementValidationChain?: ValidationChain): Return;
 
   isArrayLength(options?: { min?: number; max?: number }): Return;
 
