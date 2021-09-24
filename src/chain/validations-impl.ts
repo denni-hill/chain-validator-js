@@ -813,7 +813,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     this.addItem(
       new ValidatorContextItem(
         async (value) => typeof value === "string",
-        { type: "string" },
+        {},
         "isString"
       )
     );

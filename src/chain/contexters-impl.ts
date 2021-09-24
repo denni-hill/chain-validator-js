@@ -2,7 +2,9 @@ import { ConditionContextItem } from "../context/condition-context-item";
 import { Context, OptionalParams } from "../context/context";
 import { ContexterContextItem } from "../context/contexter-context-item";
 import { OneOfContextItem } from "../context/one-of-context-item";
+import { SchemaContextItem } from "../context/schema-context-item";
 import { Contexters } from "./contexters";
+import { ValidationChain } from "./validation-chain";
 
 export class ContextersImpl<Chain> implements Contexters<Chain> {
   constructor(
@@ -10,8 +12,14 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
     private readonly chain: Chain
   ) {}
 
-  addItem(contexter: ContexterContextItem): void {
+  protected addItem(contexter: ContexterContextItem): void {
     this.context.addItem(contexter);
+  }
+
+  schema(schema: Record<string, ValidationChain>): Chain {
+    this.context.addItem(new SchemaContextItem(schema));
+
+    return this.chain;
   }
 
   bail(): Chain {
@@ -24,8 +32,8 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
   }
 
   if(
-    conditionSchema: unknown,
-    options: { ifTrue?: unknown; ifFalse?: unknown }
+    conditionSchema: ValidationChain,
+    options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
   ): Chain {
     this.context.addItem(
       new ConditionContextItem(
@@ -40,8 +48,8 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
   }
 
   ifSelf(
-    conditionSchema: unknown,
-    options: { ifTrue?: unknown; ifFalse?: unknown }
+    conditionSchema: ValidationChain,
+    options: { ifTrue?: ValidationChain; ifFalse?: ValidationChain }
   ): Chain {
     this.context.addItem(
       new ConditionContextItem(
@@ -55,12 +63,12 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
     return this.chain;
   }
 
-  oneOf(...conditionSchemas: unknown[]): Chain {
+  oneOf(...conditionSchemas: ValidationChain[]): Chain {
     this.context.addItem(new OneOfContextItem(conditionSchemas, false));
     return this.chain;
   }
 
-  oneOfSelf(...conditionSchemas: unknown[]): Chain {
+  oneOfSelf(...conditionSchemas: ValidationChain[]): Chain {
     this.context.addItem(new OneOfContextItem(conditionSchemas, true));
     return this.chain;
   }

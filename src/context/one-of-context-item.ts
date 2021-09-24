@@ -1,11 +1,12 @@
 import { validate } from "..";
+import { ValidationChain } from "../chain/validation-chain";
 import { ValidationResult } from "../result";
 import { Context } from "./context";
 import { ContextItem } from "./context-item";
 
 export class OneOfContextItem implements ContextItem {
   constructor(
-    protected readonly validationSchemas: unknown[],
+    protected readonly validationSchemas: ValidationChain[],
     protected readonly validateSelf: boolean
   ) {}
   async run(context: Context): Promise<ValidationResult> {
