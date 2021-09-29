@@ -5,7 +5,7 @@ import { Context } from "./context";
 import { ContextItem } from "./context-item";
 
 export class ArrayContextItem implements ContextItem {
-  constructor(protected readonly validationShema: ValidationChain) {}
+  constructor(protected readonly validationChain: ValidationChain) {}
 
   async run(context: Context): Promise<ValidationResult> {
     const result = new ValidationResult();
@@ -14,7 +14,7 @@ export class ArrayContextItem implements ContextItem {
       for (const key in context.value) {
         const elementValidationResult = await validate(
           context.objectToValidate,
-          this.validationShema,
+          this.validationChain,
           [...context.path, key]
         );
         if (elementValidationResult.passed)
