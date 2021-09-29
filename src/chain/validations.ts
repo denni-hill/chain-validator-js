@@ -166,7 +166,9 @@ export interface Validations<Return> {
 
   isMultibyte(): Return;
 
-  isNumeric(options?: IsNumericOptions): Return;
+  isNumeric(
+    options?: IsNumericOptions & { min?: number; max?: number }
+  ): Return;
 
   isOctal(): Return;
 
