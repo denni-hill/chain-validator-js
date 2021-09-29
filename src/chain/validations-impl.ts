@@ -664,9 +664,14 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this.chain;
   }
 
-  isNumeric(options?: IsNumericOptions): Chain {
+  isNumeric(
+    options: IsNumericOptions & { min?: number; max?: number } = {}
+  ): Chain {
     this.addStandartValidator(
-      (value) => validator.isNumeric(value, options),
+      (value) =>
+        validator.isNumeric(value, options) &&
+        (isNaN(options.min) || Number(value) >= options.min) &&
+        (isNaN(options.max) || Number(value) <= options.max),
       { ...options },
       validator.isNumeric.name
     );
