@@ -61,6 +61,8 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   withMessage(message: string): Chain {
+    if (this.context.queue.length === 0)
+      throw new Error("Validation chain cannot start from withMessage");
     const lastContextItem = this.context.queue[this.context.queue.length - 1];
     if (!(lastContextItem instanceof ValidatorContextItem))
       throw new Error(
