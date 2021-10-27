@@ -112,11 +112,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   isArrayLength(options?: { min?: number; max?: number }): Chain {
     this.isArray();
 
-    if (
-      options === undefined ||
-      (options.min === undefined && options.max === undefined)
-    )
-      options = { min: 1, max: undefined };
+    if (options === undefined) options = { min: 1, max: Infinity };
+    if (options.min === undefined) options.min = 1;
+    if (options.max === undefined) options.max = Infinity;
 
     this.addItem(
       new ValidatorContextItem(
@@ -571,6 +569,10 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   isLength(options?: IsLengthOptions): Chain {
+    if (options === undefined) options = { min: 1, max: Infinity };
+    if (options.min === undefined) options.min = 1;
+    if (options.max === undefined) options.max = Infinity;
+
     this.addStandartValidator(
       (value) => validator.isLength(value, options),
       { ...options },
