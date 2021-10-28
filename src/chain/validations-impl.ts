@@ -151,7 +151,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this.chain;
   }
 
-  isAfter(date?: string): Chain {
+  isAfter(date: string): Chain {
     this.addStandartValidator(
       (value) => validator.isAfter(value, date),
       { date },
@@ -161,7 +161,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this.chain;
   }
 
-  isAlpha(locale?: AlphaLocale): Chain {
+  isAlpha(locale: AlphaLocale): Chain {
     this.addStandartValidator(
       (value) => validator.isAlpha(value, locale),
       { locale },
@@ -172,7 +172,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   isAlphanumeric(
-    locale?: AlphanumericLocale,
+    locale: AlphanumericLocale,
     options?: IsAlphanumericOptions
   ): Chain {
     this.addStandartValidator(
@@ -245,6 +245,9 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   isByteLength(options?: IsByteLengthOptions): Chain {
+    if (options === undefined) options = {};
+    if (options.min === undefined) options.min = 1;
+    if (options.max === undefined) options.max = Infinity;
     this.addStandartValidator(
       (value) => validator.isByteLength(value, options),
       { ...options },
@@ -460,7 +463,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this.chain;
   }
 
-  isIP(version?: IPVersion): Chain {
+  isIP(version: IPVersion = "4"): Chain {
     this.addStandartValidator(
       (value) => validator.isIP(value, version),
       { version },
@@ -470,7 +473,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
     return this.chain;
   }
 
-  isIPRange(version?: IPVersion): Chain {
+  isIPRange(version: IPVersion = "4"): Chain {
     this.addStandartValidator(
       (value) => validator.isIPRange(value, version),
       { version },
@@ -636,7 +639,7 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
   }
 
   isMobilePhone(
-    locale?: "any" | MobilePhoneLocale | MobilePhoneLocale[],
+    locale: "any" | MobilePhoneLocale | MobilePhoneLocale[] = "ru-RU",
     options?: IsMobilePhoneOptions
   ): Chain {
     this.addStandartValidator(
