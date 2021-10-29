@@ -1,7 +1,6 @@
 export interface ValidationError {
   value: unknown;
   path: string[];
-  message?: string;
-  inverse?: boolean;
+  message: string;
   args: unknown;
 }
