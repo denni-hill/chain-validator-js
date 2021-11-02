@@ -309,7 +309,8 @@ export class ValidationsImpl<Chain> implements Validations<Chain> {
 
   isDate(options?: IsDateOptions): Chain {
     this.addStandartValidator(
-      (value) => validator.isDate(value, options),
+      (value) =>
+        validator.isDate(value, options) || new Date(value).valueOf() !== NaN,
       { ...options },
       validator.isDate.name
     );
