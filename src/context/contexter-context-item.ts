@@ -15,7 +15,7 @@ export class ContexterContextItem implements ContextItem {
       result.errors.push({
         message: e.message,
         value: context.value,
-        args: {},
+        args: { fieldName: context.name },
         path: context.path
       });
     }

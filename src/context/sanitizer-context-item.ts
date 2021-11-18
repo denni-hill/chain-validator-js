@@ -6,7 +6,7 @@ import { ContextItem } from "./context-item";
 export class SanitizerContextItem implements ContextItem {
   constructor(
     readonly handler: SanitizerHandler,
-    readonly args: unknown = {}
+    readonly args: Record<string, unknown> = {}
   ) {}
 
   async run(context: Context): Promise<ValidationResult> {
@@ -17,7 +17,7 @@ export class SanitizerContextItem implements ContextItem {
       result.errors.push({
         message: e.message,
         value: context.value,
-        args: this.args,
+        args: { ...this.args, fieldName: context.name },
         path: context.path
       });
     }

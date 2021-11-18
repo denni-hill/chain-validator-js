@@ -4,6 +4,8 @@ import { ValidationChain } from "./validation-chain";
 export interface Contexters<Return> {
   schema(schema: Record<string, ValidationChain>): Return;
 
+  name(fieldName: string): Return;
+
   bail(): Return;
 
   if(

@@ -22,6 +22,12 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
     return this.chain;
   }
 
+  name(fieldName: string): Chain {
+    this.context.name = fieldName;
+
+    return this.chain;
+  }
+
   bail(): Chain {
     this.addItem(
       new ContexterContextItem(async (context: Context) => {

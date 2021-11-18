@@ -25,7 +25,7 @@ export class ValidatorContextItem implements ContextItem {
         result.errors.push({
           value: context.value,
           message: this.message,
-          args: { ...this.args, negate: this.negate },
+          args: { ...this.args, negate: this.negate, fieldName: context.name },
           path: context.path
         });
       }
@@ -33,7 +33,7 @@ export class ValidatorContextItem implements ContextItem {
       result.errors.push({
         value: context.value,
         message: e.message,
-        args: { ...this.args, negate: this.negate },
+        args: { ...this.args, negate: this.negate, fieldName: context.name },
         path: context.path
       });
     }

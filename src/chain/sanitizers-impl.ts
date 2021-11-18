@@ -21,7 +21,7 @@ export class SanitizersImpl<Chain> implements Sanitizers<Chain> {
 
   addStandartSanitizer(
     func: { (value: string): unknown },
-    args: unknown
+    args: Record<string, unknown>
   ): void {
     const asyncHandler: SanitizerHandler = async (value: unknown) =>
       func(toString(value));

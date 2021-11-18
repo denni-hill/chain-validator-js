@@ -21,6 +21,8 @@ export class Context {
   path: string[];
   value: unknown;
 
+  name?: string;
+
   addItem(item: ContextItem): void {
     this._queue.push(item);
   }
@@ -55,7 +57,7 @@ export class Context {
           value: this.value,
           message: "required",
           path: this.path,
-          args: {}
+          args: { fieldName: this.name }
         });
       }
       return result;
@@ -67,7 +69,7 @@ export class Context {
           value: this.value,
           message: "not nullable",
           path: this.path,
-          args: {}
+          args: { fieldName: this.name }
         });
       }
       return result;
