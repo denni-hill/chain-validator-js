@@ -10,7 +10,7 @@ export async function validate(
 ): Promise<ValidationResult> {
   if (chain === undefined)
     throw new Error("Validation chain cannot be undefined!");
-  if (chain === null) throw new Error("Validation schema cannot be null!");
+  if (chain === null) throw new Error("Validation chain cannot be null!");
 
   return await chain.context.run(objectToValidate, [...path], stopOnFail);
 }
