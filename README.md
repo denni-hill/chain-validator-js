@@ -169,8 +169,69 @@ validate(data, rules).then(result => console.log(JSON.stringify(result)));
   "errors": []
 }
 ```
-
 In previous example functions authorValidation and bookValidation are functions that returns validation rules, that can be used as part of another validation rules (like authorValidation is a part of bookValidation). This can be super-useful for reusing and mixing rules.
+
+### Usefull API
+#### Validate JSON schema, key - string, value - validation chain  (build)
+```JS
+  build().schma({
+    key: build()
+  })
+```
+#### Set name for field being validated (access via error.args.fieldName)
+```JS
+  build().name("fieldName") #
+```
+#### Set custom error message
+```JS
+  buid().withMessage("error message")
+```
+#### Custom validation
+```JS
+  build().custom(
+    (context) => async (value: unknown): Promise<boolean> => {
+      /* return boolean */
+    }
+  )
+```
+### Custom sanitizer
+```JS
+  build().custom(
+    (context) => async (value: unknown): Promise<unknown> => {
+      /* return sanitized value */
+    }
+  )
+```
+#### Invert next validator
+```JS
+  build().not().validatorGoesHere()
+```
+#### Conditions
+#### IfTrue will be called if condition is succeed and will be applied to schema's root as if is usefull only in schemas. IMPORTANT: Condition validation chain applies to schema object! Use ifSelf method to apply condition to field in validation chain of which ifSelf called! Same thing with oneOf and oneOfSelf
+```JS
+  build().if(build().validationGoesHere(), {
+    ifTrue: build().validationGoesHere(),
+    ifFalse: build().validationGoesGere()
+  })
+
+  build().ifSelf(build().validationGoesHere(), {
+    ifTrue: build().validationGoesHere(),
+    ifFalse: build().validationGoesGere()
+  })
+
+  build().oneOf(
+    build().validationGoesHere(), build().anotherValidationGoesHere(), build().more()
+  )
+
+  build().oneOfSelf(
+    build().validationGoesHere(), build().anotherValidationGoesHere(), build().more()
+  )
+```
+#### Bail
+#### If validation is failed bail() will prevent field for next validation and sanitizing. Can be usefull if you are on server-side and want to load instance from database using customSanitizer() after validation, but not load it, if validation failed
+```JS
+  build().validator().bail().anotherValidator()
+```
 
 ## ✍️ Authors <a name = "authors"></a>
 
