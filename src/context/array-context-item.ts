@@ -20,7 +20,9 @@ export class ArrayContextItem implements ContextItem {
         if (elementValidationResult.passed)
           result.validated.push(elementValidationResult.validated);
         else {
-          result.errors.forEach(error => error.path[context.path.length] = "*")
+          elementValidationResult.errors.forEach(
+            (error) => (error.path[context.path.length] = "*")
+          );
           result.errors.push(...elementValidationResult.errors);
         }
       }
