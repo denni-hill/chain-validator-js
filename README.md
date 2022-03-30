@@ -207,7 +207,7 @@ In previous example functions authorValidation and bookValidation are functions 
   build().not().validatorGoesHere()
 ```
 #### Conditions
-#### IfTrue will be called if condition is succeed and will be applied to schema's root as if is usefull only in schemas. IMPORTANT: Condition validation chain applies to schema object! Use ifSelf method to apply condition to field in validation chain of which ifSelf called! Same thing with oneOf and oneOfSelf
+#### IfTrue will be called if condition is succeed and will be applied to schema's root as it is usefull only in schemas. IMPORTANT: Condition validation chain applies to schema object! Use ifSelf method to apply condition to field in validation chain of which ifSelf called! Same thing with oneOf and oneOfSelf
 ```JS
   build().if(build().validationGoesHere(), {
     ifTrue: build().validationGoesHere(),
