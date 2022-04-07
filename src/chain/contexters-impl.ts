@@ -16,7 +16,7 @@ export class ContextersImpl<Chain> implements Contexters<Chain> {
     this.context.addItem(contexter);
   }
 
-  schema(schema: Record<string, ValidationChain>): Chain {
+  schema<T>(schema: Record<keyof T, ValidationChain>): Chain {
     this.context.addItem(new SchemaContextItem(schema));
 
     return this.chain;

@@ -2,7 +2,7 @@ import { OptionalParams } from "../context/context";
 import { ValidationChain } from "./validation-chain";
 
 export interface Contexters<Return> {
-  schema(schema: Record<string, ValidationChain>): Return;
+  schema<T>(schema: Record<keyof T, ValidationChain>): Return;
 
   name(fieldName: string): Return;
 
