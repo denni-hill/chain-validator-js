@@ -17,7 +17,12 @@ export class SchemaContextItem implements ContextItem {
         [...context.path, schemaKey]
       );
 
-      if (subSchemaValidationResult.passed)
+      if (subSchemaValidationResult.failed) {
+        result.errors.push(...subSchemaValidationResult.errors);
+        return;
+      }
+
+      if (subSchemaValidationResult.validated !== undefined)
         result.validated[schemaKey] = subSchemaValidationResult.validated;
       else result.errors.push(...subSchemaValidationResult.errors);
     }
