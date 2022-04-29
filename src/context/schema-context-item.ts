@@ -19,7 +19,7 @@ export class SchemaContextItem implements ContextItem {
 
       if (subSchemaValidationResult.failed) {
         result.errors.push(...subSchemaValidationResult.errors);
-        return;
+        continue;
       }
 
       if (subSchemaValidationResult.validated !== undefined)

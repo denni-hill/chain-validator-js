@@ -1,6 +1,9 @@
 import { ValidationResult } from "./result";
 import { ValidationChain } from "./chain/validation-chain";
 import { Context } from "./context/context";
+import sourceMapSupport from "source-map-support";
+
+sourceMapSupport.install();
 
 export async function validate(
   objectToValidate: unknown,
